@@ -90,7 +90,7 @@ class Plugin(BasePlugin):
 
             # 2. send the request
             response = requests.request("GET", ("https://greenaddress.it/verify/?signature=%s&txhash=%s" % (urllib.parse.quote(sig), tx.txid())),
-                                        headers = {'User-Agent': 'Electrum'})
+                                        headers = {'User-Agent': 'Electrum-BTR'})
             response = response.json()
 
             # 3. display the result

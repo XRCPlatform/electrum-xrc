@@ -108,7 +108,7 @@ class ElectrumGui(PrintError):
         # init tray
         self.dark_icon = self.config.get("dark_icon", False)
         self.tray = QSystemTrayIcon(self.tray_icon(), None)
-        self.tray.setToolTip('Electrum')
+        self.tray.setToolTip('Electrum-BTR')
         self.tray.activated.connect(self.tray_activated)
         self.build_tray_menu()
         self.tray.show()
@@ -144,7 +144,7 @@ class ElectrumGui(PrintError):
             submenu.addAction(_("Close"), window.close)
         m.addAction(_("Dark/Light"), self.toggle_tray_icon)
         m.addSeparator()
-        m.addAction(_("Exit Electrum"), self.close)
+        m.addAction(_("Exit Electrum-BTR"), self.close)
 
     def tray_icon(self):
         if self.dark_icon:
@@ -176,7 +176,7 @@ class ElectrumGui(PrintError):
 
     def show_network_dialog(self, parent):
         if not self.daemon.network:
-            parent.show_warning(_('You are using Electrum in offline mode; restart Electrum if you want to get connected'), title=_('Offline'))
+            parent.show_warning(_('You are using Electrum-BTR in offline mode; restart Electrum-BTR if you want to get connected'), title=_('Offline'))
             return
         if self.nd:
             self.nd.on_update()

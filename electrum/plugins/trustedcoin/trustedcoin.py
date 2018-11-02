@@ -232,7 +232,7 @@ class TrustedCoinCosignerClient(object):
         return self.send_request('post', relative_url, payload, headers)
 
 
-server = TrustedCoinCosignerClient(user_agent="Electrum/" + version.ELECTRUM_VERSION)
+server = TrustedCoinCosignerClient(user_agent="Electrum-BTR/" + version.ELECTRUM_VERSION)
 
 class Wallet_2fa(Multisig_Wallet):
 

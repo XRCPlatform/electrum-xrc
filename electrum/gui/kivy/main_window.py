@@ -264,7 +264,7 @@ class ElectrumWindow(App):
 
         App.__init__(self)#, **kwargs)
 
-        title = _('Electrum App')
+        title = _('Electrum-BTR App')
         self.electrum_config = config = kwargs.get('config', None)
         self.language = config.get('language', 'en')
         self.network = network = kwargs.get('network', None)  # type: Network
@@ -535,7 +535,7 @@ class ElectrumWindow(App):
             else:
                 self.load_wallet(wallet)
         else:
-            Logger.debug('Electrum: Wallet not found or action needed. Launching install wizard')
+            Logger.debug('Electrum-BTR: Wallet not found or action needed. Launching install wizard')
 
             def launch_wizard():
                 storage = WalletStorage(path, manual_upgrades=True)
@@ -766,8 +766,8 @@ class ElectrumWindow(App):
                 from plyer import notification
             icon = (os.path.dirname(os.path.realpath(__file__))
                     + '/../../' + self.icon)
-            notification.notify('Electrum', message,
-                            app_icon=icon, app_name='Electrum')
+            notification.notify('Electrum-BTR', message,
+                            app_icon=icon, app_name='Electrum-BTR')
         except ImportError:
             Logger.Error('Notification: needs plyer; `sudo pip install plyer`')
 

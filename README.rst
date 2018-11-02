@@ -1,27 +1,13 @@
-Electrum - Lightweight Bitcoin client
-=====================================
+Electrum - Lightweight BitCoin Rhodium client
+=============================================
 
 ::
 
   Licence: MIT Licence
   Author: Thomas Voegtlin
+  Author: BitCoin Rhodium Developers (Fork)
   Language: Python (>= 3.6)
-  Homepage: https://electrum.org/
-
-
-.. image:: https://travis-ci.org/spesmilo/electrum.svg?branch=master
-    :target: https://travis-ci.org/spesmilo/electrum
-    :alt: Build Status
-.. image:: https://coveralls.io/repos/github/spesmilo/electrum/badge.svg?branch=master
-    :target: https://coveralls.io/github/spesmilo/electrum?branch=master
-    :alt: Test coverage statistics
-.. image:: https://d322cqt584bo4o.cloudfront.net/electrum/localized.svg
-    :target: https://crowdin.com/project/electrum
-    :alt: Help translate Electrum online
-
-
-
-
+  Homepage: https://bitcoinrh.org/
 
 Getting started
 ===============
