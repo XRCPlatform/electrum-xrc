@@ -86,7 +86,7 @@ wine 'wineboot'
 rm -f /opt/wine-stable/lib/wine/fakedlls/api-ms-win-core-path-l1-1-0.dll
 rm -f /opt/wine-stable/lib/wine/api-ms-win-core-path-l1-1-0.dll.so
 
-cd /tmp/electrum-build
+cd /tmp/electrum-btr-build
 
 # Install Python
 # note: you might need "sudo apt-get install dirmngr" for the following

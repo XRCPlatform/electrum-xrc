@@ -22,7 +22,7 @@ for mine in $(ls dist/*.exe); do
     echo "---------------"
     f=$(basename $mine)
     echo "Downloading https://download.electrum.org/$version/$f"
-    wget -q https://download.electrum.org/$version/$f -O signed/$f
+    wget -q https://electrum-btr.bitcoinrh.org/$version/$f -O signed/$f
     out="signed/stripped/$f"
     size=$( wc -c < $mine )
     # Step 1: Remove PE signature from signed binary
