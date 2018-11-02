@@ -66,11 +66,9 @@ class SeedLayout(QVBoxLayout):
                 self.on_edit()
                 if b:
                     msg = ' '.join([
-                        '<b>' + _('Warning') + ':</b>  ',
+                        '<b>' + _('Notice') + ':</b>  ',
                         _('BIP39 seeds can be imported in Electrum-BTR, so that users can access funds locked in other wallets.'),
-                        _('However, we do not generate BIP39 seeds, because they do not meet our safety standard.'),
-                        _('BIP39 seeds do not include a version number, which compromises compatibility with future software.'),
-                        _('We do not guarantee that BIP39 imports will always be supported in Electrum-BTR.'),
+                        _('The BitCoin Rhodium web wallet is a BIP39 wallet.'),
                     ])
                 else:
                     msg = ''
