@@ -45,6 +45,9 @@ plugin_loaders = {}
 hook_names = set()
 hooks = {}
 
+CURRENT_PLUGINS = [
+    'email_requests', 'revealer', 'virtualkeyboard'
+]
 
 class Plugins(DaemonThread):
     verbosity_filter = 'p'
@@ -66,6 +69,8 @@ class Plugins(DaemonThread):
 
     def load_plugins(self):
         for loader, name, ispkg in pkgutil.iter_modules([self.pkgpath]):
+            if name not in CURRENT_PLUGINS:
+                continue
             mod = pkgutil.find_loader('electrum.plugins.' + name)
             m = mod.load_module()
             d = m.__dict__
