@@ -148,9 +148,9 @@ class ElectrumGui(PrintError):
 
     def tray_icon(self):
         if self.dark_icon:
-            return QIcon(':icons/electrum_dark_icon.png')
+            return QIcon(':icons/electrum-btr_dark_icon.png')
         else:
-            return QIcon(':icons/electrum_light_icon.png')
+            return QIcon(':icons/electrum-btr_light_icon.png')
 
     def toggle_tray_icon(self):
         self.dark_icon = not self.dark_icon
