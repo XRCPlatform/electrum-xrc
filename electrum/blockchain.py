@@ -35,6 +35,8 @@ from .simple_config import SimpleConfig
 HEADER_SIZE = 80  # bytes
 MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
+# Hard fork change at 1649
+MAX_TARGET_2 = 0x0000000000092489000000000000000000000000000000000000000000000000
 
 class MissingHeader(Exception):
     pass
@@ -172,6 +174,13 @@ class Blockchain(util.PrintError):
         p = self.path()
         self._size = os.path.getsize(p)//HEADER_SIZE if os.path.exists(p) else 0
 
+    def _is_in_initial_difficulty_adjustment_with_fork(self, header):
+        """
+        BTR had a fork at 1648 with a higher diff. It didn't adjust until block 4032.
+        Adjustments afterwards are at normal periods.
+        """
+        return header.get('block_height') >= 1649 and header.get('block_height') < 4032
+
     def verify_header(self, header: dict, prev_hash: str, target: int, expected_header_hash: str=None) -> None:
         _hash = hash_header(header)
         if expected_header_hash and expected_header_hash != _hash:
@@ -180,9 +189,15 @@ class Blockchain(util.PrintError):
             raise Exception("prev hash mismatch: %s vs %s" % (prev_hash, header.get('prev_block_hash')))
         if constants.net.TESTNET:
             return
-        bits = self.target_to_bits(target)
-        if bits != header.get('bits'):
-            raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
+
+        if self._is_in_initial_difficulty_adjustment_with_fork(header):
+            bits = self.target_to_bits(MAX_TARGET_2)
+            if bits != header.get('bits'):
+                raise Exception("bits mistmatch: %s vs %s (on fork)" % (bits, header.get('bits')))
+        else:
+            bits = self.target_to_bits(target)
+            if bits != header.get('bits'):
+                raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
         # if int('0x' + _hash, 16) > target:
         #     raise Exception("insufficient proof of work: %s vs target %s" % (int('0x' + _hash, 16), target))
 
@@ -348,6 +363,8 @@ class Blockchain(util.PrintError):
             return 0
         if index == -1:
             return MAX_TARGET
+        if index == 1648:
+            return MAX_TARGET_2
         if index < len(self.checkpoints):
             h, t = self.checkpoints[index]
             return t
