@@ -19,11 +19,20 @@ set -e
 mkdir -p tmp
 cd tmp
 
+pushd $WINEPREFIX/drive_c/
+
+if [ -d ./electrum-btr ]; then
+    rm ./electrum-btr -rf
+fi
+
+git clone git@gitlab.com:bitcoinrh/electrum-btr -b master electrum-btr
+popd
+
 pushd $WINEPREFIX/drive_c/electrum-btr
 
 # Load electrum-icons and electrum-locale for this release
 git submodule init
-git submodule update
+git submodule update --remote
 
 VERSION=`git describe --tags --dirty --always`
 echo "Last commit: $VERSION"
