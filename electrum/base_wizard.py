@@ -379,6 +379,7 @@ class BaseWizard(object):
         title = _('Seed extension')
         message = '\n'.join([
             _('You may extend your seed with custom words.'),
+            _('This is similar to the transaction password for the online BTR wallet.'),
             _('Your seed extension must be saved together with your seed.'),
         ])
         warning = '\n'.join([
@@ -532,9 +533,10 @@ class BaseWizard(object):
     def choose_seed_type(self):
         title = _('Choose Seed type')
         message = ' '.join([
-            _("The type of addresses used by your wallet will depend on your seed."),
+            _("Currently, you will be able to generate a Standard BTR wallet."),
+            _("There will be other wallet options in future versions of Electrum-BTR.")
             # _("Segwit wallets use bech32 addresses, defined in BIP173."),
-            _("Please note that websites and other wallets may not support these addresses yet."),
+            # _("Please note that websites and other wallets may not support these addresses yet."),
             # _("Thus, you might want to keep using a non-segwit wallet in order to be able to receive bitcoins during the transition period.")
         ])
         choices = [

@@ -422,7 +422,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             msg = ' '.join([
                 _("This wallet is watching-only."),
                 _("This means you will not be able to spend BitCoin Rhodium coins with it."),
-                _("Make sure you own the seed phrase or the private keys, before you request Bitcoin Rhodium coins to be sent to this wallet.")
+                _("Make sure you own the seed phrase or the private keys, before you request BitCoin Rhodium coins to be sent to this wallet.")
             ])
             self.show_warning(msg, title=_('Information'))
 
@@ -599,8 +599,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
     def show_report_bug(self):
         msg = ' '.join([
-            _("Please report any bugs as issues on github:<br/>"),
-            "<a href=\"https://github.com/spesmilo/electrum/issues\">https://github.com/spesmilo/electrum/issues</a><br/><br/>",
+            _("Please report any bugs as issues on gitlab:<br/>"),
+            "<a href=\"https://gitlab.com/bitcoinrh/electrum-btr\">https://gitlab.com/bitcoinrh/electrum-btr</a><br/><br/>",
             _("Before reporting a bug, upgrade to the most recent version of Electrum-BTR (latest release or git HEAD), and include the version number in your report."),
             _("Try to explain not only what the bug is, but how it occurs.")
          ])
@@ -858,7 +858,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             _('Expiration date of your request.'),
             _('This information is seen by the recipient if you send them a signed payment request.'),
             _('Expired requests have to be deleted manually from your list, in order to free the corresponding BitCoin Rhodium addresses.'),
-            _('The bitcoin address never expires and will always be part of this electrum wallet.'),
+            _('The BitCoin Rhodium address never expires and will always be part of this electrum wallet.'),
         ])
         grid.addWidget(HelpLabel(_('Request expires'), msg), 3, 0)
         grid.addWidget(self.expires_combo, 3, 1)
