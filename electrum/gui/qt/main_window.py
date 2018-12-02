@@ -2671,28 +2671,28 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         tx_widgets = []
         id_widgets = []
 
-        # language
-        lang_help = _('Select which language is used in the GUI (after restart).')
-        lang_label = HelpLabel(_('Language') + ':', lang_help)
-        lang_combo = QComboBox()
-        from electrum.i18n import languages
-        lang_combo.addItems(list(languages.values()))
-        lang_keys = list(languages.keys())
-        lang_cur_setting = self.config.get("language", '')
-        try:
-            index = lang_keys.index(lang_cur_setting)
-        except ValueError:  # not in list
-            index = 0
-        lang_combo.setCurrentIndex(index)
-        if not self.config.is_modifiable('language'):
-            for w in [lang_combo, lang_label]: w.setEnabled(False)
-        def on_lang(x):
-            lang_request = list(languages.keys())[lang_combo.currentIndex()]
-            if lang_request != self.config.get('language'):
-                self.config.set_key("language", lang_request, True)
-                self.need_restart = True
-        lang_combo.currentIndexChanged.connect(on_lang)
-        gui_widgets.append((lang_label, lang_combo))
+        # TODO: language (first release in English)
+        # lang_help = _('Select which language is used in the GUI (after restart).')
+        # lang_label = HelpLabel(_('Language') + ':', lang_help)
+        # lang_combo = QComboBox()
+        # from electrum.i18n import languages
+        # lang_combo.addItems(list(languages.values()))
+        # lang_keys = list(languages.keys())
+        # lang_cur_setting = self.config.get("language", '')
+        # try:
+        #     index = lang_keys.index(lang_cur_setting)
+        # except ValueError:  # not in list
+        #     index = 0
+        # lang_combo.setCurrentIndex(index)
+        # if not self.config.is_modifiable('language'):
+        #     for w in [lang_combo, lang_label]: w.setEnabled(False)
+        # def on_lang(x):
+        #     lang_request = list(languages.keys())[lang_combo.currentIndex()]
+        #     if lang_request != self.config.get('language'):
+        #         self.config.set_key("language", lang_request, True)
+        #         self.need_restart = True
+        # lang_combo.currentIndexChanged.connect(on_lang)
+        # gui_widgets.append((lang_label, lang_combo))
 
         nz_help = _('Number of zeros displayed after the decimal point. For example, if this is set to 2, "1." will be displayed as "1.00"')
         nz_label = HelpLabel(_('Zeros after decimal point') + ':', nz_help)
