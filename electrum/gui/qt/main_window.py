@@ -2717,16 +2717,17 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             _('Mempool based: fee rate is targeting a depth in the memory pool')
             ]
         )
-        fee_type_label = HelpLabel(_('Fee estimation') + ':', msg)
-        fee_type_combo = QComboBox()
-        fee_type_combo.addItems([_('Static'), _('ETA'), _('Mempool')])
-        fee_type_combo.setCurrentIndex((2 if self.config.use_mempool_fees() else 1) if self.config.is_dynfee() else 0)
-        def on_fee_type(x):
-            self.config.set_key('mempool_fees', x==2)
-            self.config.set_key('dynamic_fees', x>0)
-            self.fee_slider.update()
-        fee_type_combo.currentIndexChanged.connect(on_fee_type)
-        fee_widgets.append((fee_type_label, fee_type_combo))
+        #TODO: Restore when we can provide more diverse fee estimation options
+        #fee_type_label = HelpLabel(_('Fee estimation') + ':', msg)
+        #fee_type_combo = QComboBox()
+        #fee_type_combo.addItems([_('Static'), _('ETA'), _('Mempool')])
+        #fee_type_combo.setCurrentIndex((2 if self.config.use_mempool_fees() else 1) if self.config.is_dynfee() else 0)
+        #def on_fee_type(x):
+        #    self.config.set_key('mempool_fees', x==2)
+        #    self.config.set_key('dynamic_fees', x>0)
+        #    self.fee_slider.update()
+        #fee_type_combo.currentIndexChanged.connect(on_fee_type)
+        #fee_widgets.append((fee_type_label, fee_type_combo))
 
         feebox_cb = QCheckBox(_('Edit fees manually'))
         feebox_cb.setChecked(self.config.get('show_fee', False))
