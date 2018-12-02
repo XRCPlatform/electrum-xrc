@@ -25,7 +25,7 @@ if [ -d ./electrum-btr ]; then
     rm ./electrum-btr -rf
 fi
 
-git clone git@gitlab.com:bitcoinrh/electrum-btr -b master electrum-btr
+git clone git@gitlab.com:bitcoinrh/electrum-btr
 popd
 
 pushd $WINEPREFIX/drive_c/electrum-btr
