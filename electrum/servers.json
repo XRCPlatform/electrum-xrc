@@ -1,26 +1,26 @@
 {
     "electrumx1.bitcoinrh.org": {
         "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.2"
+        "s": "51002",
+        "t": "51001",
+        "version": "1.8"
     },
     "electrumx2.bitcoinrh.org": {
         "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.2"
+        "s": "51002",
+        "t": "51001",
+        "version": "1.8"
     },
     "electrumx3.bitcoinrh.org": {
         "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.2"
+        "s": "51002",
+        "t": "51001",
+        "version": "1.8"
     },
     "electrumx4.bitcoinrh.org": {
         "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.2"
+        "s": "51002",
+        "t": "51001",
+        "version": "1.8"
     }
 }
