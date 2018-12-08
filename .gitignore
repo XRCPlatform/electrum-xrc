@@ -26,3 +26,17 @@ electrum/gui/kivy/theming/light.atlas
 .cache/
 .coverage
 .pytest_cache
+
+# build files
+contrib/build-wine/docker/Release.key
+contrib/build-wine/electrum_data
+contrib/build-wine/tmp
+*.dylib
+Electrum_BTR.egg-info
+
+# OS X
+.DS_Store
+._.DS_Store
+
+# wallet data
+electrum_data
