@@ -41,7 +41,7 @@ pyinstaller --version
 rm -rf ./dist
 
 git submodule init
-git submodule update
+git submodule update --remote
 
 rm  -rf $BUILDDIR > /dev/null 2>&1
 mkdir $BUILDDIR
@@ -50,10 +50,10 @@ cp -R ./contrib/deterministic-build/electrum-locale/locale/ ./electrum/locale/
 cp    ./contrib/deterministic-build/electrum-icons/icons_rc.py ./electrum/gui/qt/
 
 
-info "Downloading libusb..."
-curl https://homebrew.bintray.com/bottles/libusb-1.0.22.el_capitan.bottle.tar.gz | \
-tar xz --directory $BUILDDIR
-cp $BUILDDIR/libusb/1.0.22/lib/libusb-1.0.dylib contrib/build-osx
+# info "Downloading libusb..."
+# curl https://homebrew.bintray.com/bottles/libusb-1.0.22.el_capitan.bottle.tar.gz | \
+# tar xz --directory $BUILDDIR
+# cp $BUILDDIR/libusb/1.0.22/lib/libusb-1.0.dylib contrib/build-osx
 
 info "Building libsecp256k1"
 brew install autoconf automake libtool
@@ -73,9 +73,9 @@ python3 -m pip install -Ir ./contrib/deterministic-build/requirements.txt --user
 python3 -m pip install -Ir ./contrib/deterministic-build/requirements-binaries.txt --user || \
 fail "Could not install requirements"
 
-info "Installing hardware wallet requirements..."
-python3 -m pip install -Ir ./contrib/deterministic-build/requirements-hw.txt --user || \
-fail "Could not install hardware wallet requirements"
+# info "Installing hardware wallet requirements..."
+# python3 -m pip install -Ir ./contrib/deterministic-build/requirements-hw.txt --user || \
+# fail "Could not install hardware wallet requirements"
 
 info "Building $PACKAGE..."
 python3 setup.py install --user > /dev/null || fail "Could not build $PACKAGE"
@@ -92,7 +92,7 @@ pyinstaller --noconfirm --ascii --clean --name $VERSION contrib/build-osx/osx.sp
 
 info "Adding bitcoin URI types to Info.plist"
 plutil -insert 'CFBundleURLTypes' \
-	-xml '<array><dict> <key>CFBundleURLName</key> <string>bitcoin</string> <key>CFBundleURLSchemes</key> <array><string>bitcoin</string></array> </dict></array>' \
+	-xml '<array><dict> <key>CFBundleURLName</key> <string>bitcoin-rhodium</string> <key>CFBundleURLSchemes</key> <array><string>bitcoin-rhodium</string></array> </dict></array>' \
 	-- dist/$PACKAGE.app/Contents/Info.plist \
 	|| fail "Could not add keys to Info.plist. Make sure the program 'plutil' exists and is installed."
 

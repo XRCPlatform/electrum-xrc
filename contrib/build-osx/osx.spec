@@ -6,7 +6,7 @@ import sys
 import os
 
 PACKAGE='Electrum-BTR'
-PYPKG='electrum-btr'
+PYPKG='electrum'
 MAIN_SCRIPT='run_electrum-btr'
 ICONS_FILE='electrum-btr.icns'
 
@@ -22,28 +22,28 @@ block_cipher = None
 
 # see https://github.com/pyinstaller/pyinstaller/issues/2005
 hiddenimports = []
-hiddenimports += collect_submodules('trezorlib')
-hiddenimports += collect_submodules('safetlib')
-hiddenimports += collect_submodules('btchip')
-hiddenimports += collect_submodules('keepkeylib')
+#hiddenimports += collect_submodules('trezorlib')
+#hiddenimports += collect_submodules('safetlib')
+#hiddenimports += collect_submodules('btchip')
+#hiddenimports += collect_submodules('keepkeylib')
 hiddenimports += collect_submodules('websocket')
 hiddenimports += collect_submodules('ckcc')
 
 datas = [
     (electrum + PYPKG + '/*.json', PYPKG),
     (electrum + PYPKG + '/wordlist/english.txt', PYPKG + '/wordlist'),
-    (electrum + PYPKG + '/locale', PYPKG + '/locale'),
+    # (electrum + PYPKG + '/locale', PYPKG + '/locale'),
     (electrum + PYPKG + '/plugins', PYPKG + '/plugins'),
 ]
-datas += collect_data_files('trezorlib')
-datas += collect_data_files('safetlib')
-datas += collect_data_files('btchip')
-datas += collect_data_files('keepkeylib')
+#datas += collect_data_files('trezorlib')
+#datas += collect_data_files('safetlib')
+#datas += collect_data_files('btchip')
+#datas += collect_data_files('keepkeylib')
 datas += collect_data_files('ckcc')
 
 # Add libusb so Trezor and Safe-T mini will work
-binaries = [(electrum + "contrib/build-osx/libusb-1.0.dylib", ".")]
-binaries += [(electrum + "contrib/build-osx/libsecp256k1.0.dylib", ".")]
+#binaries = [(electrum + "contrib/build-osx/libusb-1.0.dylib", ".")]
+binaries = [(electrum + "contrib/build-osx/libsecp256k1.0.dylib", ".")]
 
 # Workaround for "Retro Look":
 binaries += [b for b in collect_dynamic_libs('PyQt5') if 'macstyle' in b[0]]
@@ -60,13 +60,13 @@ a = Analysis([electrum+ MAIN_SCRIPT,
               electrum+'electrum/commands.py',
               electrum+'electrum/plugins/cosigner_pool/qt.py',
               electrum+'electrum/plugins/email_requests/qt.py',
-              electrum+'electrum/plugins/trezor/client.py',
-              electrum+'electrum/plugins/trezor/qt.py',
-              electrum+'electrum/plugins/safe_t/client.py',
-              electrum+'electrum/plugins/safe_t/qt.py',
-              electrum+'electrum/plugins/keepkey/qt.py',
-              electrum+'electrum/plugins/ledger/qt.py',
-              electrum+'electrum/plugins/coldcard/qt.py',
+              # electrum+'electrum/plugins/trezor/client.py',
+              # electrum+'electrum/plugins/trezor/qt.py',
+              # electrum+'electrum/plugins/safe_t/client.py',
+              # electrum+'electrum/plugins/safe_t/qt.py',
+              # electrum+'electrum/plugins/keepkey/qt.py',
+              # electrum+'electrum/plugins/ledger/qt.py',
+              # electrum+'electrum/plugins/coldcard/qt.py',
               ],
              binaries=binaries,
              datas=datas,

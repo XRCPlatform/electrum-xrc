@@ -97,7 +97,7 @@ setup(
             'locale/*/LC_MESSAGES/electrum-btr.mo',
         ],
     },
-    scripts=['electrum/electrum'],
+    scripts=['electrum/electrum-btr'],
     data_files=data_files,
     description="Lightweight BitCoin Rhodium Wallet",
     author="Thomas Voegtlin",
