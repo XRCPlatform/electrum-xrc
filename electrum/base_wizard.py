@@ -103,7 +103,7 @@ class BaseWizard(object):
             _("What kind of wallet do you want to create?")
         ])
         wallet_kinds = [
-            ('standard',  _("Standard wallet")),
+            ('standard',  _("Standard wallet (\"R\"-prefixed addresses)")),
             ('2fa', _("Wallet with two-factor authentication")),
             ('multisig',  _("Multi-signature wallet")),
             ('imported',  _("Import BitCoin Rhodium addresses or private keys")),
