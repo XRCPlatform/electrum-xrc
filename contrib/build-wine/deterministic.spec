@@ -127,6 +127,22 @@ exe_dependent = EXE(
     icon=home+'icons/electrum-btr.ico',
     console=False)
 
+#####
+# build just for testnet
+
+exe_testnet = EXE(
+    pyz,
+    a.scripts,
+    a.binaries,
+    a.datas + [('is_testnet', 'README.md', 'DATA'),
+               ('is_portable', 'README.md', 'DATA')],
+    name=os.path.join('build  \\pyi.win32\\electrum-btr', cmdline_name + "-testnet.exe"),
+    debug=False,
+    strip=None,
+    upx=False,
+    icon=home+'icons/electrum-btr.ico',
+    console=False)
+
 coll = COLLECT(
     exe_dependent,
     a.binaries,
