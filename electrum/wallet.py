@@ -1650,7 +1650,7 @@ class Multisig_Wallet(Deterministic_Wallet):
         txin['num_sig'] = self.m
 
 
-wallet_types = ['standard', 'multisig', 'imported']
+wallet_types = ['web_wallet_restore', 'standard', 'multisig', 'imported']
 
 def register_wallet_type(category):
     wallet_types.append(category)

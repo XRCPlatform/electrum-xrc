@@ -103,6 +103,7 @@ class BaseWizard(object):
             _("What kind of wallet do you want to create?")
         ])
         wallet_kinds = [
+            ('web_wallet_restore', _("Restore From Web Wallet")),
             ('standard',  _("Standard wallet (\"R\"-prefixed addresses)")),
             ('2fa', _("Wallet with two-factor authentication")),
             ('multisig',  _("Multi-signature wallet")),
@@ -134,7 +135,7 @@ class BaseWizard(object):
 
     def on_wallet_type(self, choice):
         self.wallet_type = choice
-        if choice == 'standard':
+        if choice == 'standard' or choice == 'web_wallet_restore':
             action = 'choose_keystore'
         elif choice == 'multisig':
             action = 'choose_multisig'
@@ -154,9 +155,15 @@ class BaseWizard(object):
         self.multisig_dialog(run_next=on_multisig)
 
     def choose_keystore(self):
-        assert self.wallet_type in ['standard', 'multisig']
+        assert self.wallet_type in ['web_wallet_restore', 'standard', 'multisig']
         i = len(self.keystores)
         title = _('Add cosigner') + ' (%d of %d)'%(i+1, self.n) if self.wallet_type=='multisig' else _('Keystore')
+
+        # This is specifically for handling BTR wallet restoration
+        if self.wallet_type == 'web_wallet_restore':
+            self.restore_from_web_wallet()
+            return
+
         if self.wallet_type =='standard' or i==0:
             message = _('Do you want to create a new seed, or to restore a wallet using an existing seed?')
             choices = [
@@ -335,7 +342,7 @@ class BaseWizard(object):
             # For legacy, this is partially compatible with BIP45; assumes index=0
             # For segwit, a custom path is used, as there is no standard at all.
             choices = [
-                ('standard',   'legacy multisig (p2sh)',            "m/45'/0"),
+                ('standard',   'legacy multisig (p2sh)',            "m/10291'/0"),
                 # ('p2wsh-p2sh', 'p2sh-segwit multisig (p2wsh-p2sh)', purpose48_derivation(0, xtype='p2wsh-p2sh')),
                 # ('p2wsh',      'native segwit multisig (p2wsh)',    purpose48_derivation(0, xtype='p2wsh')),
             ]
@@ -394,9 +401,36 @@ class BaseWizard(object):
     def restore_from_seed(self):
         self.opt_bip39 = True
         self.opt_ext = True
-        is_cosigning_seed = lambda x: bitcoin.seed_type(x) in ['standard', 'segwit']
-        test = bitcoin.is_seed if self.wallet_type == 'standard' else is_cosigning_seed
+        is_cosigning_seed = lambda x: bitcoin.seed_type(x) in ['web_wallet_restore', 'standard', 'segwit']
+        test = bitcoin.is_seed if self.wallet_type == 'standard' or self.wallet_type == 'web_wallet_restore' else is_cosigning_seed
         self.restore_seed_dialog(run_next=self.on_restore_seed, test=test)
+
+    def create_web_wallet_keystore(self, seed, passphrase, first_address):
+        k = keystore.from_bip39_seed(seed, passphrase, bip44_derivation(0, bip43_purpose=44), xtype='standard')
+        pk = k.derive_pubkey(False, 0)
+        address = bitcoin.pubkey_to_address('p2pkh', pk)
+
+        if first_address != address:
+            import base64
+            passphrase_base64 = base64.b64encode(passphrase.encode('utf-8')).decode('utf-8')
+            k = keystore.from_bip39_seed(seed, passphrase_base64, bip44_derivation(0, bip43_purpose=44), xtype='standard')
+            pk = k.derive_pubkey(False, 0)
+            address = bitcoin.pubkey_to_address('p2pkh', pk)
+
+        return (k, address, )
+
+
+    def restore_from_web_wallet(self):
+        self.opt_bip39 = True
+        self.opt_ext = True
+        def test(seed, passphrase, first_address):
+            """
+            Derive the keystore, check first address.
+            """
+            keystore, address = self.create_web_wallet_keystore(seed, passphrase, first_address)
+            return address == first_address
+
+        self.restore_web_wallet_dialog(run_next=self.on_restore_web_wallet, test=test)
 
     def on_restore_seed(self, seed, is_bip39, is_ext):
         self.seed_type = 'bip39' if is_bip39 else bitcoin.seed_type(seed)
@@ -413,6 +447,14 @@ class BaseWizard(object):
             self.run('on_restore_seed', seed, is_ext)
         else:
             raise Exception('Unknown seed type', self.seed_type)
+
+    def on_restore_web_wallet(self, seed, passphrase, first_address):
+        """
+        Generates BIP39 wallet from seed and passphrase with default derivation path.
+        """
+        keystore, address = self.create_web_wallet_keystore(seed, passphrase, first_address)
+        self.keystores.append(keystore)
+        self.run('create_wallet')
 
     def on_restore_bip39(self, seed, passphrase):
         def f(derivation, script_type):
@@ -507,7 +549,7 @@ class BaseWizard(object):
         for k in self.keystores:
             if k.may_have_password():
                 k.update_password(None, password)
-        if self.wallet_type == 'standard':
+        if self.wallet_type == 'standard' or self.wallet_type == 'web_wallet_restore':
             self.storage.put('seed_type', self.seed_type)
             keys = self.keystores[0].dump()
             self.storage.put('keystore', keys)

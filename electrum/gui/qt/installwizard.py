@@ -111,7 +111,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         self.config = config
         # Set for base base class
         self.language_for_seed = config.get('language')
-        self.setMinimumSize(600, 400)
+        self.setMinimumSize(700, 500)
         self.accept_signal.connect(self.accept)
         self.title = QLabel()
         self.main_widget = QWidget()
@@ -376,7 +376,10 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
     def seed_input(self, title, message, is_seed, options):
         slayout = SeedLayout(title=message, is_seed=is_seed, options=options, parent=self)
         self.exec_layout(slayout, title, next_enabled=False)
-        return slayout.get_seed(), slayout.is_bip39, slayout.is_ext
+        if options and 'web_wallet_restore' in options:
+            return slayout.get_seed(), slayout.tx_line.text(), slayout.first_address.text()
+        else:
+            return slayout.get_seed(), slayout.is_bip39, slayout.is_ext
 
     @wizard_dialog
     def add_xpub_dialog(self, title, message, is_valid, run_next, allow_multi=False, show_wif_help=False):
@@ -406,6 +409,13 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
             options.append('bip39')
         title = _('Enter Seed')
         message = _('Please enter your seed phrase in order to restore your wallet.')
+        return self.seed_input(title, message, test, options)
+
+    @wizard_dialog
+    def restore_web_wallet_dialog(self, run_next, test):
+        title = _('Enter Seed From Web Wallet')
+        options = ['web_wallet_restore', 'ext', 'bip39']
+        message = _('Please enter your seed from the BTR web wallet.')
         return self.seed_input(title, message, test, options)
 
     @wizard_dialog
