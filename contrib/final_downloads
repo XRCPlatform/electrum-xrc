@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+contrib=$(dirname "$0")
+mkdir -p $contrib/downloads
+
+cp -r $contrib/../dist/* $contrib/downloads
+cp -r $contrib/build-wine/dist/*.exe $contrib/downloads
+
+cd $contrib/downloads
+
+FILES=`ls -1`
+for file in $FILES;
+do
+    gpg --sign --armor --detach $file
+done
