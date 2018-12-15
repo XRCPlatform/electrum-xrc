@@ -1675,7 +1675,13 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
                     self.invoice_list.update()
                     self.do_clear()
                 else:
-                    parent.show_error(msg)
+                    spend_error_msg = ''.join([
+                        _('There was an error delivering your transaction. '),
+                        _('This is most likely because of invalid input or outputs. '),
+                        _('For example, you might be spending from one or more transaction that has not been confirmed yet.'),
+                        _(' In this case, Ensure that the coins are confirmed and spendable.')
+                    ])
+                    parent.show_error(spend_error_msg)
 
         WaitingDialog(self, _('Broadcasting transaction...'),
                       broadcast_thread, broadcast_done, self.on_error)
