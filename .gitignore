@@ -32,6 +32,7 @@ contrib/build-wine/docker/Release.key
 contrib/build-wine/electrum_data
 contrib/build-wine/tmp
 *.dylib
+contrib/downloads
 
 # OS X
 .DS_Store
