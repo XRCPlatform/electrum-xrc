@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 contrib=$(dirname "$0")
+rm -r $contrib/downloads
 mkdir -p $contrib/downloads
 
 cp -r $contrib/../dist/* $contrib/downloads
@@ -8,8 +9,17 @@ cp -r $contrib/build-wine/dist/*.exe $contrib/downloads
 
 cd $contrib/downloads
 
-FILES=`ls -1`
+FILES=`ls -1 *.{exe,tar.gz,dmg}`
 for file in $FILES;
 do
     gpg --sign --armor --detach $file
+    MD5=`md5sum $file`
+    SHA256=`sha256sum $file`
+    cat<<EOF > $file.DIGESTS.txt
+# MD5 hash
+$MD5
+$ SHA-256 hash
+$SHA256
+EOF
+
 done
