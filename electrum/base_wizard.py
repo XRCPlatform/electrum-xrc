@@ -342,7 +342,7 @@ class BaseWizard(object):
             # For legacy, this is partially compatible with BIP45; assumes index=0
             # For segwit, a custom path is used, as there is no standard at all.
             choices = [
-                ('standard',   'legacy multisig (p2sh)',            "m/10291'/0"),
+                ('standard',   'legacy multisig (p2sh)',            "m/45'/0"),
                 # ('p2wsh-p2sh', 'p2sh-segwit multisig (p2wsh-p2sh)', purpose48_derivation(0, xtype='p2wsh-p2sh')),
                 # ('p2wsh',      'native segwit multisig (p2wsh)',    purpose48_derivation(0, xtype='p2wsh')),
             ]
