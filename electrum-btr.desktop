@@ -3,7 +3,7 @@
 
 [Desktop Entry]
 Comment=Lightweight BitCoin Rhodium Client
-Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum %u"
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum-btr %u"
 GenericName[en_US]=BitCoin Rhodium Wallet
 GenericName=BitCoin Rhodium Wallet
 Icon=electrum
@@ -17,5 +17,5 @@ MimeType=x-scheme-handler/bitcoin-rhodium;
 Actions=Testnet;
 
 [Desktop Action Testnet]
-Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum --testnet %u"
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum-btr --testnet %u"
 Name=Testnet mode
