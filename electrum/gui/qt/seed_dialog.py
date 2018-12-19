@@ -50,7 +50,11 @@ def seed_warning_msg(seed):
     ]).format(len(seed.split()))
 
 BTR_WALLET_MSG = ''.join([
-    '<i>' + _('Please consider moving your BTR to a new wallet instead. ') + '</i>',
+    '<b>' + _('Make sure the seed, password and first address is correct (for example, if spaces were included in the transaction password, the spaces must be included.)') + '</b>',
+    '<br /><br />',
+    _('By supplying this first web wallet address, it is possible to check if the seed and transaction password are correct before generating the wallet file.'),
+    '<br /><br />',
+    _('Please consider moving your BTR to a new wallet instead if you wish to use Electrum-BTR. '),
     _('If you decide to move your BTR to a new wallet, click BACK and select another wallet type.'),
     '<br />'])
 
@@ -214,8 +218,9 @@ class SeedLayout(QVBoxLayout):
                 is_seed = self.is_seed(self.get_seed(), self.tx_line.text(), self.first_address.text())
             else:
                 return False
+
             if not is_seed:
-                self.warning_tx_address.setText('<b><font color="red">' + 
+                self.warning_tx_address.setText('<b><font color="red">' +
                 _('Could not match first address with the seed and transaction password provided.') +
                 '</font></b>'
                 )
