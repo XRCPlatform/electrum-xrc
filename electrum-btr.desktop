@@ -1,5 +1,5 @@
 # If you want Electrum-BTR to appear in a Linux app launcher ("start menu"), install this by doing:
-# sudo desktop-file-install electrum.desktop
+# sudo desktop-file-install electrum-btr.desktop
 
 [Desktop Entry]
 Comment=Lightweight BitCoin Rhodium Client
