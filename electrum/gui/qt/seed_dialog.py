@@ -138,7 +138,7 @@ class SeedLayout(QVBoxLayout):
         if options and not self.is_web_wallet_restore():
             opt_button = EnterButton(_('Options'), self.seed_options)
             hbox.addWidget(opt_button)
-        
+
         if self.is_web_wallet_restore():
             self.is_bip39 = True
             self.is_ext = True
@@ -173,18 +173,18 @@ class SeedLayout(QVBoxLayout):
             self.first_address.textChanged.connect(self.enable_on_next_web_wallet)
             self.address_vbox.addWidget(self.first_address)
             self.restore_vbox.addLayout(self.address_vbox)
-            
+
             self.derivation_error_hbox = QHBoxLayout()
             self.derivation_error_hbox.addStretch(1)
-        
+
             self.warning_tx_address = QLabel('')
             self.derivation_error_hbox.addWidget(self.warning_tx_address)
-            
+
             self.restore_vbox.addLayout(self.derivation_error_hbox)
             self.addLayout(self.restore_vbox)
         else:
             self.seed_warning = WWLabel('')
-        
+
         self.addWidget(self.seed_warning)
 
 
