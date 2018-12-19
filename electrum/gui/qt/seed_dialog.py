@@ -79,7 +79,7 @@ class SeedLayout(QVBoxLayout):
                     ])
                 else:
                     msg = ''
-                    self.seed_warning.setText(msg)
+                self.seed_warning.setText(msg)
 
             cb_bip39 = QCheckBox(_('BIP39 seed'))
             cb_bip39.toggled.connect(f)
