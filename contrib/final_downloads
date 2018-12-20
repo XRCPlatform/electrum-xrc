@@ -18,7 +18,7 @@ do
     cat<<EOF > $file.DIGESTS.txt
 # MD5 hash
 $MD5
-$ SHA-256 hash
+# SHA-256 hash
 $SHA256
 EOF
 
