@@ -32,6 +32,7 @@ import shutil
 import weakref
 import webbrowser
 import csv
+import re
 from decimal import Decimal
 import base64
 from functools import partial
@@ -1677,11 +1678,19 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
                 else:
                     spend_error_msg = ''.join([
                         _('There was an error delivering your transaction. '),
-                        _('This is most likely because of invalid input or outputs. '),
-                        _('For example, you might be spending from one or more transaction that has not been confirmed yet.'),
-                        _(' In this case, Ensure that the coins are confirmed and spendable.')
+                        _('This could happen for a variety of reasons. '),
+                        '<br /><br />',
+                        _('For example, you might be spending from one or more transaction that has not been confirmed yet. '),
+                        _('Another issue is that it could be that there is an attempt to relay the transaction with a fee that is too low. '),
+                        _('In this case, ensure that the coins are confirmed, spendable and the fee is correct. '),
+                        _('The error that occurred is below.')
                     ])
-                    parent.show_error(spend_error_msg)
+                    newmsg = ''
+                    try:
+                        newmsg = re.search(r"'error': '(.*?)'", msg)[1]
+                    except:
+                        pass
+                    parent.show_error(spend_error_msg + '<br /><br />' + newmsg)
 
         WaitingDialog(self, _('Broadcasting transaction...'),
                       broadcast_thread, broadcast_done, self.on_error)
