@@ -7,7 +7,7 @@ Electrum - Lightweight BitCoin Rhodium client
   Author: Thomas Voegtlin
   Author: BitCoin Rhodium Developers (Fork)
   Language: Python (>= 3.6)
-  Homepage: https://bitcoinrh.org/
+  Homepage: https://electrum.bitcoinrh.org/
 
 Getting started
 ===============
@@ -22,7 +22,7 @@ Electrum from its root directory, without installing it on your
 system; all the python dependencies are included in the 'packages'
 directory. To run Electrum from its root directory, just do::
 
-    ./run_electrum
+    ./run_electrum-btr
 
 You can also install Electrum on your system, by running this command::
 
@@ -45,8 +45,8 @@ Development version
 
 Check out the code from GitHub::
 
-    git clone git://github.com/spesmilo/electrum.git
-    cd electrum
+    git clone git://gitlab.com/bitcoinrh/electrum-btr.git
+    cd electrum-btr
 
 Run install (this should install dependencies)::
 
@@ -64,7 +64,7 @@ Compile the icons file for Qt::
 Compile the protobuf description file::
 
     sudo apt-get install protobuf-compiler
-    protoc --proto_path=electrum --python_out=electrum electrum/paymentrequest.proto
+    protoc --proto_path=electrum-btr --python_out=electrum-btr electrum/paymentrequest.proto
 
 Create translations (optional)::
 
@@ -93,9 +93,3 @@ Windows
 -------
 
 See `contrib/build-wine/`.
-
-
-Android
--------
-
-See `electrum/gui/kivy/Readme.md` file.
