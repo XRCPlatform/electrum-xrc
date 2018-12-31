@@ -1,3 +1,47 @@
+# Release 3.3.2 - (December 21, 2018)
+
+ * Fix Qt history export bug
+ * Improve network timeouts
+
+
+# Release 3.3.1 - (December 20, 2018)
+
+ * Qt: Fix invoices tab crash (#4941)
+ * Android: Minor GUI improvements
+
+
+# Release 3.3.0 - Hodler's Edition (December 19, 2018)
+
+ * The network layer has been rewritten using asyncio and aiorpcx.
+   In addition to easier maintenance, this makes the client
+   more robust against misbehaving servers.
+ * The minimum python version was increased to 3.6
+ * The blockchain headers and fork handling logic has been generalized.
+   Clients by default now follow chain based on most work, not length.
+ * New wallet creation defaults to native segwit (bech32).
+ * Segwit 2FA: TrustedCoin now supports native segwit p2wsh
+   two-factor wallets.
+ * RBF batching (opt-in): If the wallet has an unconfirmed RBF
+   transaction, new payments will be added to that transaction,
+   instead of creating new transactions.
+ * MacOS: support QR code scanner in binaries.
+ * Android APK:
+   - build using Google NDK instead of Crystax NDK
+   - target API 28
+   - do not use external storage (previously for block headers)
+ * hardware wallets:
+   - Coldcard now supports spending from p2wpkh-p2sh,
+     fixed p2pkh signing for fw 1.1.0
+   - Archos Safe-T mini: fix #4726 signing issue
+   - KeepKey: full segwit support
+   - Trezor: refactoring and compat with python-trezor 0.11
+   - Digital BitBox: support firmware v5.0.0
+ * fix bitcoin URI handling when app already running (#4796)
+ * Qt listings rewritten:
+   the History tab now uses QAbstractItemModel, the other tabs use
+   QStandardItemModel. Performance should be better for large wallets.
+ * Several other minor bugfixes and usability improvements.
+
 # Release 3.2.3.1 FOR Electrum-BTR - (December 16, 2018)
  * Update all copy relevant for BitCoin Rhodium
  * Update all URLs (block explorer, etc.)

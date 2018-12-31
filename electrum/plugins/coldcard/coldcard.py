@@ -13,10 +13,11 @@ from electrum.keystore import Hardware_KeyStore, xpubkey_to_pubkey, Xpub
 from electrum.transaction import Transaction
 from electrum.wallet import Standard_Wallet
 from electrum.crypto import hash_160
-from electrum.util import print_error, bfh, bh2u, versiontuple
+from electrum.util import print_error, bfh, bh2u, versiontuple, UserFacingException
 from electrum.base_wizard import ScriptTypeNotSupported
 
 from ..hw_wallet import HW_PluginBase
+from ..hw_wallet.plugin import LibraryFoundButUnusable
 
 try:
     import hid
@@ -118,6 +119,8 @@ class CKCCClient:
                 or (self.dev.master_fingerprint != expected_xfp)
                 or (self.dev.master_xpub != expected_xpub)):
             # probably indicating programing error, not hacking
+            print_error("[coldcard]", f"xpubs. reported by device: {self.dev.master_xpub}. "
+                                      f"stored in file: {expected_xpub}")
             raise RuntimeError("Expecting 0x%08x but that's not whats connected?!" %
                                     expected_xfp)
 
@@ -190,8 +193,8 @@ class CKCCClient:
         try:
             __, depth, fingerprint, child_number, c, cK = deserialize_xpub(xpub)
         except InvalidMasterKeyVersionBytes:
-            raise Exception(_('Invalid xpub magic. Make sure your {} device is set to the correct chain.')
-                            .format(self.device)) from None
+            raise UserFacingException(_('Invalid xpub magic. Make sure your {} device is set to the correct chain.')
+                                      .format(self.device)) from None
         if xtype != 'standard':
             xpub = serialize_xpub(xtype, c, cK, depth, fingerprint, child_number)
         return xpub
@@ -305,7 +308,7 @@ class Coldcard_KeyStore(Hardware_KeyStore):
             self.ux_busy = False
         if clear_client:
             self.client = None
-        raise Exception(message)
+        raise UserFacingException(message)
 
     def wrap_busy(func):
         # decorator: function takes over the UX on the device.
@@ -318,7 +321,7 @@ class Coldcard_KeyStore(Hardware_KeyStore):
         return wrapper
 
     def decrypt_message(self, pubkey, message, password):
-        raise RuntimeError(_('Encryption and decryption are currently not supported for {}').format(self.device))
+        raise UserFacingException(_('Encryption and decryption are currently not supported for {}').format(self.device))
 
     @wrap_busy
     def sign_message(self, sequence, message, password):
@@ -390,7 +393,7 @@ class Coldcard_KeyStore(Hardware_KeyStore):
             wallet.add_hw_info(tx)
 
         # wallet.add_hw_info installs this attr
-        assert tx.output_info, 'need data about outputs'
+        assert tx.output_info is not None, 'need data about outputs'
 
         # Build map of pubkey needed as derivation from master, in PSBT binary format
         # 1) binary version of the common subpath for all keys
@@ -454,9 +457,12 @@ class Coldcard_KeyStore(Hardware_KeyStore):
 
         # inputs section
         for txin in inputs:
-            utxo = txin['prev_tx'].outputs()[txin['prevout_n']]
-            spendable = txin['prev_tx'].serialize_output(utxo)
-            write_kv(PSBT_IN_WITNESS_UTXO, spendable)
+            if Transaction.is_segwit_input(txin):
+                utxo = txin['prev_tx'].outputs()[txin['prevout_n']]
+                spendable = txin['prev_tx'].serialize_output(utxo)
+                write_kv(PSBT_IN_WITNESS_UTXO, spendable)
+            else:
+                write_kv(PSBT_IN_NON_WITNESS_UTXO, str(txin['prev_tx']))
 
             pubkeys, x_pubkeys = tx.get_sorted_pubkeys(txin)
 
@@ -605,7 +611,7 @@ class ColdcardPlugin(HW_PluginBase):
     def __init__(self, parent, config, name):
         HW_PluginBase.__init__(self, parent, config, name)
 
-        self.libraries_available = self.check_libraries_available() and requirements_ok
+        self.libraries_available = self.check_libraries_available()
         if not self.libraries_available:
             return
 
@@ -615,9 +621,13 @@ class ColdcardPlugin(HW_PluginBase):
     def get_library_version(self):
         import ckcc
         try:
-            return ckcc.__version__
+            version = ckcc.__version__
         except AttributeError:
-            return 'unknown'
+            version = 'unknown'
+        if requirements_ok:
+            return version
+        else:
+            raise LibraryFoundButUnusable(library_version=version)
 
     def detect_simulator(self):
         # if there is a simulator running on this machine,
@@ -625,10 +635,14 @@ class ColdcardPlugin(HW_PluginBase):
         fn = CKCC_SIMULATOR_PATH
 
         if os.path.exists(fn):
-            return [Device(fn, -1, fn, (COINKITE_VID, CKCC_SIMULATED_PID), 0)]
+            return [Device(path=fn,
+                           interface_number=-1,
+                           id_=fn,
+                           product_key=(COINKITE_VID, CKCC_SIMULATED_PID),
+                           usage_page=0,
+                           transport_ui_string='simulator')]
 
         return []
-        
 
     def create_client(self, device, handler):
         if handler:
@@ -650,8 +664,8 @@ class ColdcardPlugin(HW_PluginBase):
         device_id = device_info.device.id_
         client = devmgr.client_by_id(device_id)
         if client is None:
-            raise Exception(_('Failed to create a client for this device.') + '\n' +
-                            _('Make sure it is in the correct state.'))
+            raise UserFacingException(_('Failed to create a client for this device.') + '\n' +
+                                      _('Make sure it is in the correct state.'))
         client.handler = self.create_handler(wizard)
 
     def get_xpub(self, device_id, derivation, xtype, wizard):

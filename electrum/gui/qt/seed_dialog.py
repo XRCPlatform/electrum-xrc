@@ -286,6 +286,4 @@ class SeedDialog(WindowModalDialog):
         title =  _("Your wallet generation seed is:")
         slayout = SeedLayout(title=title, seed=seed, msg=True, passphrase=passphrase)
         vbox.addLayout(slayout)
-        has_extension = True if passphrase else False
-        run_hook('set_seed', seed, has_extension, slayout.seed_e)
         vbox.addLayout(Buttons(CloseButton(self)))

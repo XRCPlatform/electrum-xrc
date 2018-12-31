@@ -2,7 +2,7 @@ import os
 import sys
 import threading
 import traceback
-from typing import Tuple
+from typing import Tuple, List, Callable
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -438,7 +438,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         return slayout.is_ext
 
     def pw_layout(self, msg, kind, force_disable_encrypt_cb):
-        playout = PasswordLayout(None, msg, kind, self.next_button,
+        playout = PasswordLayout(msg=msg, kind=kind, OK_button=self.next_button,
                                  force_disable_encrypt_cb=force_disable_encrypt_cb)
         playout.encrypt_cb.setChecked(True)
         self.exec_layout(playout.layout())
@@ -452,7 +452,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
 
     @wizard_dialog
     def request_storage_encryption(self, run_next):
-        playout = PasswordLayoutForHW(None, MSG_HW_STORAGE_ENCRYPTION, PW_NEW, self.next_button)
+        playout = PasswordLayoutForHW(MSG_HW_STORAGE_ENCRYPTION)
         playout.encrypt_cb.setChecked(True)
         self.exec_layout(playout.layout())
         return playout.encrypt_cb.isChecked()
@@ -515,8 +515,9 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         return clayout.selected_index()
 
     @wizard_dialog
-    def choice_and_line_dialog(self, title, message1, choices, message2,
-                               test_text, run_next) -> Tuple[str, str]:
+    def choice_and_line_dialog(self, title: str, message1: str, choices: List[Tuple[str, str, str]],
+                               message2: str, test_text: Callable[[str], int],
+                               run_next, default_choice_idx: int=0) -> Tuple[str, str]:
         vbox = QVBoxLayout()
 
         c_values = [x[0] for x in choices]
@@ -525,7 +526,8 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         def on_choice_click(clayout):
             idx = clayout.selected_index()
             line.setText(c_default_text[idx])
-        clayout = ChoicesLayout(message1, c_titles, on_choice_click)
+        clayout = ChoicesLayout(message1, c_titles, on_choice_click,
+                                checked_index=default_choice_idx)
         vbox.addLayout(clayout.layout())
 
         vbox.addSpacing(50)
