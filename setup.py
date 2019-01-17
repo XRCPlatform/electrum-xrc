@@ -100,10 +100,10 @@ setup(
     scripts=['electrum/electrum-btr'],
     data_files=data_files,
     description="Lightweight BitCoin Rhodium Wallet",
-    author="Thomas Voegtlin",
-    author_email="thomasv@electrum.org",
+    author="Thomas Voegtlin/BitCoin Rhodium Developers",
+    author_email="thomasv@electrum.org/dvbr3@protonmail.com",
     license="MIT Licence",
-    url="https://bitcoinrh.org",
+    url="https://www.bitcoinrh.org",
     long_description="""Lightweight BitCoin Rhodium Wallet""",
     cmdclass={
         'install': CustomInstallCommand,
