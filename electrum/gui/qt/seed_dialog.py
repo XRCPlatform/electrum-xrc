@@ -50,9 +50,9 @@ def seed_warning_msg(seed):
     ]).format(len(seed.split()))
 
 BTR_WALLET_MSG = ''.join([
-    '<b>' + _('Make sure the seed, password and first address is correct (for example, if spaces were included in the transaction password, the spaces must be included.)') + '</b>',
+    '<b>' + _('Make sure the seed, password and first address (if supplied) is correct. For example, if spaces were included in the transaction password, the spaces must be included.') + '</b>',
     '<br /><br />',
-    _('By supplying this first web wallet address, it is possible to check if the seed and transaction password are correct before generating the wallet file.'),
+    _('By supplying this first web wallet address, it is possible to check if the seed and transaction password are correct before generating the wallet file. This is an optional but useful check.'),
     '<br /><br />',
     _('Please consider moving your BTR to a new wallet instead if you wish to use Electrum-BTR. '),
     _('If you decide to move your BTR to a new wallet, click BACK and select another wallet type.'),
@@ -207,8 +207,10 @@ class SeedLayout(QVBoxLayout):
         if self.is_web_wallet_restore():
             tx_line = self.tx_line.text()
             first_address = self.first_address.text()
-            is_address = is_b58_address(first_address)
-            return len(self.get_seed()) > 0 and len(tx_line) > 0 and len(first_address) > 0 and is_address
+            if first_address:
+                is_address = is_b58_address(first_address)
+                return len(self.get_seed()) > 0 and len(tx_line) > 0 and len(first_address) > 0 and is_address
+            return len(tx_line) > 0
         else:
             return True
 
@@ -219,7 +221,7 @@ class SeedLayout(QVBoxLayout):
             else:
                 return False
 
-            if not is_seed:
+            if not is_seed and self.first_address.text():
                 self.warning_tx_address.setText('<b><font color="red">' +
                 _('Could not match first address with the seed and transaction password provided.') +
                 '</font></b>'

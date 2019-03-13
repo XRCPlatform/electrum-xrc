@@ -415,20 +415,26 @@ class BaseWizard(object):
         test = bitcoin.is_seed if self.wallet_type == 'standard' or self.wallet_type == 'web_wallet_restore' else is_cosigning_seed
         self.restore_seed_dialog(run_next=self.on_restore_seed, test=test)
 
+    def derive_with_base64_passphrase(self, seed, passphrase):
+        import base64
+        passphrase_base64 = base64.b64encode(passphrase.encode('utf-8')).decode('utf-8')
+        k = keystore.from_bip39_seed(seed, passphrase_base64, bip44_derivation(0, bip43_purpose=44), xtype='standard')
+        pk = k.derive_pubkey(False, 0)
+        address = bitcoin.pubkey_to_address('p2pkh', pk)
+        return (k, address, )
+
     def create_web_wallet_keystore(self, seed, passphrase, first_address):
+        if not first_address or first_address == "":
+            return self.derive_with_base64_passphrase(seed, passphrase)
+
         k = keystore.from_bip39_seed(seed, passphrase, bip44_derivation(0, bip43_purpose=44), xtype='standard')
         pk = k.derive_pubkey(False, 0)
         address = bitcoin.pubkey_to_address('p2pkh', pk)
 
         if first_address != address:
-            import base64
-            passphrase_base64 = base64.b64encode(passphrase.encode('utf-8')).decode('utf-8')
-            k = keystore.from_bip39_seed(seed, passphrase_base64, bip44_derivation(0, bip43_purpose=44), xtype='standard')
-            pk = k.derive_pubkey(False, 0)
-            address = bitcoin.pubkey_to_address('p2pkh', pk)
+            k, address = self.derive_with_base64_passphrase(seed, passphrase)
 
         return (k, address, )
-
 
     def restore_from_web_wallet(self):
         self.opt_bip39 = True
@@ -437,8 +443,14 @@ class BaseWizard(object):
             """
             Derive the keystore, check first address.
             """
+            from electrum.keystore import bip39_is_checksum_valid
+            is_checksum, is_wordlist = bip39_is_checksum_valid(seed)
+
             keystore, address = self.create_web_wallet_keystore(seed, passphrase, first_address)
-            return address == first_address
+            if first_address:
+                return address == first_address and is_checksum and is_wordlist
+
+            return is_checksum and is_wordlist
 
         self.restore_web_wallet_dialog(run_next=self.on_restore_web_wallet, test=test)
 
