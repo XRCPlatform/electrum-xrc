@@ -434,8 +434,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         if self.wallet.is_watching_only():
             msg = ' '.join([
                 _("This wallet is watching-only."),
-                _("This means you will not be able to spend BitCoin Rhodium coins with it."),
-                _("Make sure you own the seed phrase or the private keys, before you request BitCoin Rhodium coins to be sent to this wallet.")
+                _("This means you will not be able to spend Bitcoin Rhodium coins with it."),
+                _("Make sure you own the seed phrase or the private keys, before you request Bitcoin Rhodium coins to be sent to this wallet.")
             ])
             self.show_warning(msg, title=_('Information'))
 
@@ -597,11 +597,11 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
     def show_about(self):
         QMessageBox.about(self, "Electrum-BTR",
                           (_("Version")+" %s" % ELECTRUM_VERSION + "\n\n" +
-                           _("Electrum-BTR's focus is speed, with low resource usage and simplifying BitCoin Rhodium.") + " " +
+                           _("Electrum-BTR's focus is speed, with low resource usage and simplifying Bitcoin Rhodium.") + " " +
                            _("You do not need to perform regular backups, because your wallet can be "
                               "recovered from a secret phrase that you can memorize or write on paper.") + " " +
                            _("Startup times are instant because it operates in conjunction with high-performance "
-                              "servers that handle the most complicated parts of the BitCoin Rhodium system.") + "\n\n" +
+                              "servers that handle the most complicated parts of the Bitcoin Rhodium system.") + "\n\n" +
                            _("Uses icons from the Icons8 icon pack (icons8.com).")))
 
     def show_report_bug(self):
@@ -836,7 +836,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.receive_address_e = ButtonsLineEdit()
         self.receive_address_e.addCopyButton(self.app)
         self.receive_address_e.setReadOnly(True)
-        msg = _('BitCoin Rhodium address where the payment should be received. Note that each payment request uses a different BitCoin Rhodium address.')
+        msg = _('Bitcoin Rhodium address where the payment should be received. Note that each payment request uses a different Bitcoin Rhodium address.')
         self.receive_address_label = HelpLabel(_('Receiving address'), msg)
         self.receive_address_e.textChanged.connect(self.update_receive_qr)
         self.receive_address_e.setFocusPolicy(Qt.ClickFocus)
@@ -866,8 +866,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         msg = ' '.join([
             _('Expiration date of your request.'),
             _('This information is seen by the recipient if you send them a signed payment request.'),
-            _('Expired requests have to be deleted manually from your list, in order to free the corresponding BitCoin Rhodium addresses.'),
-            _('The BitCoin Rhodium address never expires and will always be part of this electrum wallet.'),
+            _('Expired requests have to be deleted manually from your list, in order to free the corresponding Bitcoin Rhodium addresses.'),
+            _('The Bitcoin Rhodium address never expires and will always be part of this electrum wallet.'),
         ])
         grid.addWidget(HelpLabel(_('Request expires'), msg), 3, 0)
         grid.addWidget(self.expires_combo, 3, 1)
@@ -1097,7 +1097,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.amount_e = BTCAmountEdit(self.get_decimal_point)
         self.payto_e = PayToEdit(self)
         msg = _('Recipient of the funds.') + '\n\n'\
-              + _('You may enter a BitCoin Rhodium address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a BitCoin Rhodium address)')
+              + _('You may enter a Bitcoin Rhodium address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a Bitcoin Rhodium address)')
         payto_label = HelpLabel(_('Pay to'), msg)
         grid.addWidget(payto_label, 1, 0)
         grid.addWidget(self.payto_e, 1, 1, 1, -1)
@@ -1142,7 +1142,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         hbox.addStretch(1)
         grid.addLayout(hbox, 4, 4)
 
-        msg = _('BitCoin Rhodium transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
+        msg = _('Bitcoin Rhodium transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
               + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed.') + '\n\n'\
               + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size of the transaction.')
         self.fee_e_label = HelpLabel(_('Fee'), msg)
@@ -1533,10 +1533,10 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         for o in outputs:
             if o.address is None:
-                self.show_error(_('BitCoin Rhodium Address is None'))
+                self.show_error(_('Bitcoin Rhodium Address is None'))
                 return
             if o.type == TYPE_ADDRESS and not bitcoin.is_address(o.address):
-                self.show_error(_('Invalid BitCoin Rhodium Address'))
+                self.show_error(_('Invalid Bitcoin Rhodium Address'))
                 return
             if o.value is None:
                 self.show_error(_('Invalid Amount'))
@@ -2242,7 +2242,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         address  = address.text().strip()
         message = message.toPlainText().strip()
         if not bitcoin.is_address(address):
-            self.show_message(_('Invalid BitCoin Rhodium address.'))
+            self.show_message(_('Invalid Bitcoin Rhodium address.'))
             return
         if self.wallet.is_watching_only():
             self.show_message(_('This is a watching-only wallet.'))
@@ -2270,7 +2270,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         address  = address.text().strip()
         message = message.toPlainText().strip().encode('utf-8')
         if not bitcoin.is_address(address):
-            self.show_message(_('Invalid BitCoin Rhodium address.'))
+            self.show_message(_('Invalid Bitcoin Rhodium address.'))
             return
         try:
             # This can throw on invalid base64

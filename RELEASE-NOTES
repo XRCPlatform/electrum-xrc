@@ -43,10 +43,10 @@
  * Several other minor bugfixes and usability improvements.
 
 # Release 3.2.3.1 FOR Electrum-BTR - (December 16, 2018)
- * Update all copy relevant for BitCoin Rhodium
+ * Update all copy relevant for Bitcoin Rhodium
  * Update all URLs (block explorer, etc.)
  * Add wallet setup flow for web wallet.
- * Configure constants for BitCoin Rhodium network.
+ * Configure constants for Bitcoin Rhodium network.
  * Small UI changes to make it easier to understand certain scenarios.
  * Turning off functionality not ready for now.
 

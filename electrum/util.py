@@ -615,12 +615,12 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'BitCoin Rhodium Explorer': ('https://explorer.bitcoinrh.org/btr/',
+    'Bitcoin Rhodium Explorer': ('https://explorer.bitcoinrh.org/btr/',
                                  {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 testnet_block_explorers = {
-    'BitCoin Rhodium Explorer': ('https://texplorer.bitcoinrh.org/btr/',
+    'Bitcoin Rhodium Explorer': ('https://texplorer.bitcoinrh.org/btr/',
                                  {'tx': 'tx/', 'addr': 'address/'})
 }
 

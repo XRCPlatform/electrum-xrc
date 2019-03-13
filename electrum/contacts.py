@@ -91,7 +91,7 @@ class Contacts(dict):
                 'type': 'openalias',
                 'validated': validated
             }
-        raise Exception("Invalid BitCoin Rhodium address or alias", k)
+        raise Exception("Invalid Bitcoin Rhodium address or alias", k)
 
     def resolve_openalias(self, url):
         # support email-style addresses, per the OA standard

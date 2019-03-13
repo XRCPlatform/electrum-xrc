@@ -2,13 +2,13 @@
 # sudo desktop-file-install electrum-btr.desktop
 
 [Desktop Entry]
-Comment=Lightweight BitCoin Rhodium Client
+Comment=Lightweight Bitcoin Rhodium Client
 Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum-btr %u"
-GenericName[en_US]=BitCoin Rhodium Wallet
-GenericName=BitCoin Rhodium Wallet
+GenericName[en_US]=Bitcoin Rhodium Wallet
+GenericName=Bitcoin Rhodium Wallet
 Icon=electrum-btr
-Name[en_US]=Electrum BitCoin Rhodium Wallet
-Name=Electrum BitCoin Rhodium Wallet
+Name[en_US]=Electrum Bitcoin Rhodium Wallet
+Name=Electrum Bitcoin Rhodium Wallet
 Categories=Finance;Network;
 StartupNotify=false
 Terminal=false

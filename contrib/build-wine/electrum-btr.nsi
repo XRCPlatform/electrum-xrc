@@ -8,7 +8,7 @@
 
   !define PRODUCT_NAME "Electrum-BTR"
   !define PRODUCT_WEB_SITE "https://gitlab.com/bitcoinrh/electrum-btr"
-  !define PRODUCT_PUBLISHER "BitCoin Rhodium Developers"
+  !define PRODUCT_PUBLISHER "Bitcoin Rhodium Developers"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
 ;--------------------------------
