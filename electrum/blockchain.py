@@ -253,7 +253,8 @@ class Blockchain(util.PrintError):
         p = self.path()
         self._size = os.path.getsize(p)//HEADER_SIZE if os.path.exists(p) else 0
 
-    def _is_in_initial_difficulty_adjustment_with_fork(self, header):
+    @classmethod
+    def _is_in_initial_difficulty_adjustment_with_fork(cls, header):
         """
         BTR had a fork at 1648 with a higher diff. It didn't adjust until block 4032.
         Adjustments afterwards are at normal periods.
@@ -269,12 +270,12 @@ class Blockchain(util.PrintError):
             raise Exception("prev hash mismatch: %s vs %s" % (prev_hash, header.get('prev_block_hash')))
         if constants.net.TESTNET:
             return
-        if self._is_in_initial_difficulty_adjustment_with_fork(header):
-            bits = self.target_to_bits(MAX_TARGET_2)
+        if cls._is_in_initial_difficulty_adjustment_with_fork(header):
+            bits = cls.target_to_bits(MAX_TARGET_2)
             if bits != header.get('bits'):
                 raise Exception("bits mistmatch: %s vs %s (on fork)" % (bits, header.get('bits')))
         else:
-            bits = self.target_to_bits(target)
+            bits = cls.target_to_bits(target)
             if bits != header.get('bits'):
                 raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
 
