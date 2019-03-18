@@ -9,3 +9,4 @@ aiorpcx>=0.9,<0.11
 aiohttp
 aiohttp_socks
 certifi
+x13-hash>=2.1.3

@@ -23,6 +23,7 @@
 import os
 import threading
 from typing import Optional, Dict
+import x13_hash
 
 from . import util
 from .bitcoin import hash_encode, int_to_hex, rev_hex
@@ -37,6 +38,7 @@ MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
 # Hard fork change at 1649
 MAX_TARGET_2 = 0x0000000000092489000000000000000000000000000000000000000000000000
+TARGET_2_BLOCK_HEIGHT = 1649
 
 class MissingHeader(Exception):
     pass
@@ -69,17 +71,22 @@ def deserialize_header(s: bytes, height: int) -> dict:
     h['block_height'] = height
     return h
 
-def hash_header(header: dict) -> str:
+def hash_header(header: dict, x13=False) -> str:
     if header is None:
         return '0' * 64
     if header.get('prev_block_hash') is None:
         header['prev_block_hash'] = '00'*32
-    return hash_raw_header(serialize_header(header))
+    if x13:
+        return hash_for_pow(serialize_header(header))
+    else:
+        return hash_raw_header(serialize_header(header))
 
 
 def hash_raw_header(header: str) -> str:
     return hash_encode(sha256d(bfh(header)))
 
+def hash_for_pow(header: str) -> str:
+    return hash_encode(x13_hash.getPoWHash(bfh(header)))
 
 # key: blockhash hex at forkpoint
 # the chain at some key is the best chain that includes the given hash
@@ -259,10 +266,11 @@ class Blockchain(util.PrintError):
         BTR had a fork at 1648 with a higher diff. It didn't adjust until block 4032.
         Adjustments afterwards are at normal periods.
         """
-        return header.get('block_height') >= 1649 and header.get('block_height') < 4032
+        return header.get('block_height') >= TARGET_2_BLOCK_HEIGHT and header.get('block_height') < 4032
 
     @classmethod
     def verify_header(cls, header: dict, prev_hash: str, target: int, expected_header_hash: str=None) -> None:
+        _proofhash = hash_header(header, x13=True)
         _hash = hash_header(header)
         if expected_header_hash and expected_header_hash != _hash:
             raise Exception("hash mismatches with expected: {} vs {}".format(expected_header_hash, _hash))
@@ -279,9 +287,9 @@ class Blockchain(util.PrintError):
             if bits != header.get('bits'):
                 raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
 
-        # block_hash_as_num = int.from_bytes(bfh(_hash), byteorder='big')
-        # if block_hash_as_num > target:
-        #     raise Exception(f"insufficient proof of work: {block_hash_as_num} vs target {target}")
+        proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')
+        if header.get('block_height') >= TARGET_2_BLOCK_HEIGHT and proof_hash_as_num > target:
+            raise Exception(f"insufficient proof of work: {proof_hash_as_num} vs target {target}")
 
     def verify_chunk(self, index: int, data: bytes) -> None:
         num = len(data) // HEADER_SIZE
