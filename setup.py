@@ -17,7 +17,7 @@ _min_python_version_tuple = tuple(map(int, (MIN_PYTHON_VERSION.split("."))))
 
 
 if sys.version_info[:3] < _min_python_version_tuple:
-    sys.exit("Error: Electrum-BTR requires Python version >= {}...".format(MIN_PYTHON_VERSION))
+    sys.exit("Error: Electrum-XRC requires Python version >= {}...".format(MIN_PYTHON_VERSION))
 
 with open('contrib/requirements/requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -46,8 +46,8 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
         else:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
-        (os.path.join(usr_share, 'applications/'), ['electrum-btr.desktop']),
-        (os.path.join(usr_share, icons_dirname), ['icons/electrum-btr.png'])
+        (os.path.join(usr_share, 'applications/'), ['electrum-xrc.desktop']),
+        (os.path.join(usr_share, icons_dirname), ['icons/electrum-xrc.png'])
     ]
 
 extras_require = {
@@ -76,7 +76,7 @@ class CustomInstallCommand(install):
 
 
 setup(
-    name="Electrum-BTR",
+    name="Electrum-XRC",
     version=version.ELECTRUM_VERSION,
     python_requires='>={}'.format(MIN_PYTHON_VERSION),
     install_requires=requirements,
@@ -94,10 +94,10 @@ setup(
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
         'electrum': [
             'wordlist/*.txt',
-            'locale/*/LC_MESSAGES/electrum-btr.mo',
+            'locale/*/LC_MESSAGES/electrum-xrc.mo',
         ],
     },
-    scripts=['electrum/electrum-btr'],
+    scripts=['electrum/electrum-xrc'],
     data_files=data_files,
     description="Lightweight Bitcoin Rhodium Wallet",
     author="Thomas Voegtlin/Bitcoin Rhodium Developers",

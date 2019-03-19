@@ -17,7 +17,7 @@ Builder.load_string('''
 
 <SettingsDialog@Popup>
     id: settings
-    title: _('Electrum-BTR Settings')
+    title: _('Electrum-XRC Settings')
     disable_pin: False
     use_encryption: False
     BoxLayout:

@@ -263,7 +263,7 @@ class Blockchain(util.PrintError):
     @classmethod
     def _is_in_initial_difficulty_adjustment_with_fork(cls, header):
         """
-        BTR had a fork at 1648 with a higher diff. It didn't adjust until block 4032.
+        XRC had a fork at 1648 with a higher diff. It didn't adjust until block 4032.
         Adjustments afterwards are at normal periods.
         """
         return header.get('block_height') >= TARGET_2_BLOCK_HEIGHT and header.get('block_height') < 4032

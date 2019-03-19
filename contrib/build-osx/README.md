@@ -13,7 +13,7 @@ makes the binaries incompatible with older versions.
 Before starting, make sure that the Xcode command line tools are installed (e.g. you have `git`).
 
 
-    cd electrum-btr
+    cd electrum-xrc
     ./contrib/build-osx/make_osx
 
 This creates a folder named Electrum.app.
@@ -32,5 +32,5 @@ Copy the Electrum.app directory over and install the dependencies, e.g.:
 
 Then you can just invoke `package.sh` with the path to the app:
 
-    cd electrum-btr
-    ./contrib/build-osx/package.sh ~/Electrum-BTR.app/
+    cd electrum-xrc
+    ./contrib/build-osx/package.sh ~/Electrum-XRC.app/

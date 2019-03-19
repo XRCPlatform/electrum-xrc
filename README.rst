@@ -22,7 +22,7 @@ Electrum from its root directory without installing it on your
 system; all the python dependencies are included in the 'packages'
 directory. To run Electrum from its root directory, just do::
 
-    ./run_electrum-btr
+    ./run_electrum-xrc
 
 You can also install Electrum on your system, by running this command::
 
@@ -64,7 +64,7 @@ Compile the icons file for Qt::
 Compile the protobuf description file::
 
     sudo apt-get install protobuf-compiler
-    protoc --proto_path=electrum-btr --python_out=electrum-btr electrum/paymentrequest.proto
+    protoc --proto_path=electrum-xrc --python_out=electrum-xrc electrum/paymentrequest.proto
 
 Create translations (optional)::
 

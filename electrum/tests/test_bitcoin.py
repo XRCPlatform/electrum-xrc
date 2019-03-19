@@ -155,7 +155,7 @@ class Test_bitcoin(SequentialTestCase):
     @needs_test_with_all_ecc_implementations
     def test_msg_signing(self):
         msg1 = b'Release the Kraken!!! Zeus'
-        msg2 = b'Electrum-BTR'
+        msg2 = b'Electrum-XRC'
 
         def sign_message_with_wif_privkey(wif_privkey, msg):
             txin_type, privkey, compressed = deserialize_privkey(wif_privkey)

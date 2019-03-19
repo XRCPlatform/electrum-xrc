@@ -131,7 +131,7 @@ class BitcoinAverage(ExchangeBase):
 
     async def get_rates(self, ccy):
         json = await self.get_json('apiv2.bitcoinaverage.com', '/indices/global/ticker/short')
-        return dict([(r.replace("BTR", ""), Decimal(json[r]['last']))
+        return dict([(r.replace("XRC", ""), Decimal(json[r]['last']))
                      for r in json if r != 'timestamp'])
 
     def history_ccys(self):
@@ -141,7 +141,7 @@ class BitcoinAverage(ExchangeBase):
 
     async def request_history(self, ccy):
         history = await self.get_csv('apiv2.bitcoinaverage.com',
-                               "/indices/global/history/BTR%s?period=alltime&format=csv" % ccy)
+                               "/indices/global/history/XRC%s?period=alltime&format=csv" % ccy)
         return dict([(h['DateTime'][:10], h['Average'])
                      for h in history])
 
@@ -160,8 +160,8 @@ class BitcoinVenezuela(ExchangeBase):
 
     async def get_rates(self, ccy):
         json = await self.get_json('api.bitcoinvenezuela.com', '/')
-        rates = [(r, json['BTR'][r]) for r in json['BTR']
-                 if json['BTR'][r] is not None]  # Giving NULL for LTC
+        rates = [(r, json['XRC'][r]) for r in json['XRC']
+                 if json['XRC'][r] is not None]  # Giving NULL for LTC
         return dict(rates)
 
     def history_ccys(self):
@@ -169,8 +169,8 @@ class BitcoinVenezuela(ExchangeBase):
 
     async def request_history(self, ccy):
         json = await self.get_json('api.bitcoinvenezuela.com',
-                             "/historical/index.php?coin=BTR")
-        return json[ccy +'_BTR']
+                             "/historical/index.php?coin=XRC")
+        return json[ccy +'_XRC']
 
 
 class Bitbank(ExchangeBase):
@@ -190,7 +190,7 @@ class BitFlyer(ExchangeBase):
 class Bitmarket(ExchangeBase):
 
     async def get_rates(self, ccy):
-        json = await self.get_json('www.bitmarket.pl', '/json/BTRPLN/ticker.json')
+        json = await self.get_json('www.bitmarket.pl', '/json/XRCPLN/ticker.json')
         return {'PLN': Decimal(json['last'])}
 
 
@@ -341,7 +341,7 @@ class TheRockTrading(ExchangeBase):
 
     async def get_rates(self, ccy):
         json = await self.get_json('api.therocktrading.com',
-                             '/v1/funds/BTREUR/ticker')
+                             '/v1/funds/XRCEUR/ticker')
         return {'EUR': Decimal(json['last'])}
 
 class Unocoin(ExchangeBase):

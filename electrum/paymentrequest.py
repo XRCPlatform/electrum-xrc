@@ -46,8 +46,8 @@ from .transaction import TxOutput
 from .network import Network
 
 
-REQUEST_HEADERS = {'Accept': 'application/bitcoin-rhodium-paymentrequest', 'User-Agent': 'Electrum-BTR'}
-ACK_HEADERS = {'Content-Type':'application/bitcoin-rhodium-payment','Accept':'application/bitcoin-rhodium-paymentack','User-Agent':'Electrum-BTR'}
+REQUEST_HEADERS = {'Accept': 'application/bitcoin-rhodium-paymentrequest', 'User-Agent': 'Electrum-XRC'}
+ACK_HEADERS = {'Content-Type':'application/bitcoin-rhodium-payment','Accept':'application/bitcoin-rhodium-paymentack','User-Agent':'Electrum-XRC'}
 
 ca_path = certifi.where()
 ca_list = None
@@ -280,7 +280,7 @@ class PaymentRequest:
         paymnt.transactions.append(bfh(raw_tx))
         ref_out = paymnt.refund_to.add()
         ref_out.script = util.bfh(transaction.Transaction.pay_script(TYPE_ADDRESS, refund_addr))
-        paymnt.memo = "Paid using Electrum-BTR"
+        paymnt.memo = "Paid using Electrum-XRC"
         pm = paymnt.SerializeToString()
         payurl = urllib.parse.urlparse(pay_det.payment_url)
         resp_content = None

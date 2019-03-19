@@ -61,19 +61,19 @@ def inv_dict(d):
 ca_path = certifi.where()
 
 
-base_units = {'BTR':8, 'mBTR':5, 'bits':2, 'sat':0}
+base_units = {'XRC':8, 'mXRC':5, 'bits':2, 'sat':0}
 
 base_units_inverse = inv_dict(base_units)
-base_units_list = ['BTR', 'mBTR', 'bits', 'sat']  # list(dict) does not guarantee order
+base_units_list = ['XRC', 'mXRC', 'bits', 'sat']  # list(dict) does not guarantee order
 
-DECIMAL_POINT_DEFAULT = 8  # BTR
+DECIMAL_POINT_DEFAULT = 8  # XRC
 
 
 class UnknownBaseUnit(Exception): pass
 
 
 def decimal_point_to_base_unit_name(dp: int) -> str:
-    # e.g. 8 -> "BTR"
+    # e.g. 8 -> "XRC"
     try:
         return base_units_inverse[dp]
     except KeyError:
@@ -81,7 +81,7 @@ def decimal_point_to_base_unit_name(dp: int) -> str:
 
 
 def base_unit_name_to_decimal_point(unit_name: str) -> int:
-    # e.g. "BTR" -> 8
+    # e.g. "XRC" -> 8
     try:
         return base_units[unit_name]
     except KeyError:
@@ -149,7 +149,7 @@ class Satoshis(object):
         return 'Satoshis(%d)'%self.value
 
     def __str__(self):
-        return format_satoshis(self.value) + " BTR"
+        return format_satoshis(self.value) + " XRC"
 
     def __eq__(self, other):
         return self.value == other.value
@@ -394,7 +394,7 @@ def assert_datadir_available(config_path):
         return
     else:
         raise FileNotFoundError(
-            'Electrum-BTR datadir does not exist. Was it deleted while running?' + '\n' +
+            'Electrum-XRC datadir does not exist. Was it deleted while running?' + '\n' +
             'Should be at {}'.format(path))
 
 
@@ -478,14 +478,16 @@ def bh2u(x: bytes) -> str:
 
 
 def user_dir():
+    set_dir = None
+
     if 'ANDROID_DATA' in os.environ:
         return android_data_dir()
     elif os.name == 'posix':
-        return os.path.join(os.environ["HOME"], ".electrum-btr")
+        set_dir = os.path.join(os.environ["HOME"], ".electrum-btr")
     elif "APPDATA" in os.environ:
-        return os.path.join(os.environ["APPDATA"], "Electrum-BTR")
+        set_dir os.path.join(os.environ["APPDATA"], "Electrum-BTR")
     elif "LOCALAPPDATA" in os.environ:
-        return os.path.join(os.environ["LOCALAPPDATA"], "Electrum-BTR")
+        set_dir = os.path.join(os.environ["LOCALAPPDATA"], "Electrum-BTR")
     else:
         #raise Exception("No home directory found in environment variables.")
         return
@@ -865,7 +867,7 @@ class TxMinedInfo(NamedTuple):
 
 def make_aiohttp_session(proxy: dict, headers=None, timeout=None):
     if headers is None:
-        headers = {'User-Agent': 'Electrum-BTR'}
+        headers = {'User-Agent': 'Electrum-XRC'}
     if timeout is None:
         timeout = aiohttp.ClientTimeout(total=10)
     ssl_context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=ca_path)

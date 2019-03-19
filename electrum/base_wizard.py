@@ -163,7 +163,7 @@ class BaseWizard(object):
         i = len(self.keystores)
         title = _('Add cosigner') + ' (%d of %d)'%(i+1, self.n) if self.wallet_type=='multisig' else _('Keystore')
 
-        # This is specifically for handling BTR wallet restoration
+        # This is specifically for handling XRC wallet restoration
         if self.wallet_type == 'web_wallet_restore':
             self.restore_from_web_wallet()
             return
@@ -175,8 +175,8 @@ class BaseWizard(object):
                 ('restore_from_seed', _('I already have a seed')),
                 ('restore_from_key', _('Use a master key')),
             ]
-            # if not self.is_kivy:
-            #     choices.append(('choose_hw_device',  _('Use a hardware device')))
+            if not self.is_kivy:
+                choices.append(('choose_hw_device',  _('Use a hardware device')))
         else:
             message = _('Add a cosigner to your multi-sig wallet')
             choices = [
@@ -396,7 +396,7 @@ class BaseWizard(object):
         title = _('Seed extension')
         message = '\n'.join([
             _('You may extend your seed with custom words.'),
-            _('This is similar to the transaction password for the online BTR wallet.'),
+            _('This is similar to the transaction password for the online XRC wallet.'),
             _('Your seed extension must be saved together with your seed.'),
         ])
         warning = '\n'.join([
@@ -599,8 +599,8 @@ class BaseWizard(object):
         title = _('Choose Seed type')
 
         message = ' '.join([
-            _("Currently, you will be able to generate a Standard BTR wallet."),
-            _("There will be other wallet options in future versions of Electrum-BTR.")
+            _("Currently, you will be able to generate a Standard XRC wallet."),
+            _("There will be other wallet options in future versions of Electrum-XRC.")
             # _("Segwit wallets use bech32 addresses, defined in BIP173."),
             # _("Please note that websites and other wallets may not support these addresses yet."),
             # _("Thus, you might want to keep using a non-segwit wallet in order to be able to receive bitcoins during the transition period.")
@@ -650,5 +650,5 @@ class BaseWizard(object):
             self.wallet.synchronize()
             self.wallet.storage.write()
             self.terminate()
-        msg = _("Electrum-BTR is generating your addresses, please wait...")
+        msg = _("Electrum-XRC is generating your addresses, please wait...")
         self.waiting_dialog(task, msg)

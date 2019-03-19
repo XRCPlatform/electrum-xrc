@@ -9,9 +9,9 @@ echo "Clearing $here/build and $here/dist..."
 rm "$here"/build/* -rf
 rm "$here"/dist/* -rf
 
-mkdir -p /tmp/electrum-btr-build
-mkdir -p /tmp/electrum-btr-build/pip-cache
-export PIP_CACHE_DIR="/tmp/electrum-btr-build/pip-cache"
+mkdir -p /tmp/electrum-xrc-build
+mkdir -p /tmp/electrum-xrc-build/pip-cache
+export PIP_CACHE_DIR="/tmp/electrum-xrc-build/pip-cache"
 
 $here/build-secp256k1.sh || exit 1
 
