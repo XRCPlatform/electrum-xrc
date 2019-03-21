@@ -310,7 +310,11 @@ if __name__ == '__main__':
         config_options['testnet'] = True
 
     if config_options.get('portable'):
-        config_options['electrum_path'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'electrum-btr_data')
+        electrum_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'electrum-btr_data')
+        if os.path.exists(electrum_path):
+            config_options['electrum_path'] = electrum_path
+        else:
+            config_options['electrum_path'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'electrum-xrc_data')
 
     # kivy sometimes freezes when we write to sys.stderr
     set_verbosity(config_options.get('verbosity') if config_options.get('gui') != 'kivy' else '')

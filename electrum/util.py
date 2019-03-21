@@ -476,21 +476,31 @@ def bh2u(x: bytes) -> str:
     """
     return hfu(x).decode('ascii')
 
+def set_correct_user_dir(current_user_dir, changed_user_dir) -> str:
+    if current_user_dir and os.path.exists(current_user_dir):
+        return current_user_dir # as in, don't change anything, just
+    return changed_user_dir
 
-def user_dir():
-    set_dir = None
+def user_dir() -> str:
+    current_user_dir = None
+    changed_user_dir = None
 
     if 'ANDROID_DATA' in os.environ:
         return android_data_dir()
     elif os.name == 'posix':
-        set_dir = os.path.join(os.environ["HOME"], ".electrum-btr")
+        current_user_dir = os.path.join(os.environ["HOME"], ".electrum-btr")
+        changed_user_dir = os.path.join(os.environ["HOME"], ".electrum-xrc")
     elif "APPDATA" in os.environ:
-        set_dir os.path.join(os.environ["APPDATA"], "Electrum-BTR")
+        current_user_dir = os.path.join(os.environ["APPDATA"], "Electrum-BTR")
+        changed_user_dir = os.path.join(os.environ["APPDATA"], "Electrum-XRC")
     elif "LOCALAPPDATA" in os.environ:
-        set_dir = os.path.join(os.environ["LOCALAPPDATA"], "Electrum-BTR")
+        current_user_dir = os.path.join(os.environ["LOCALAPPDATA"], "Electrum-BTR")
+        changed_user_dir = os.path.join(os.environ["LOCALAPPDATA"], "Electrum-XRC")
     else:
         #raise Exception("No home directory found in environment variables.")
         return
+
+    return set_correct_user_dir(current_user_dir, changed_user_dir)
 
 def is_valid_email(s):
     regexp = r"[^@]+@[^@]+\.[^@]+"
