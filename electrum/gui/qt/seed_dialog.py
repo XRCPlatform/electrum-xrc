@@ -23,13 +23,19 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import (QVBoxLayout, QCheckBox, QHBoxLayout, QLineEdit,
+                             QLabel, QCompleter, QDialog)
+
 from electrum.i18n import _
 from electrum.mnemonic import Mnemonic
 import electrum.old_mnemonic
 from electrum.plugin import run_hook
 from electrum.bitcoin import is_b58_address
 
-from .util import *
+from .util import (Buttons, OkButton, WWLabel, ButtonsTextEdit, icon_path,
+                   EnterButton, CloseButton, WindowModalDialog)
 from .qrtextedit import ShowQRTextEdit, ScanQRTextEdit
 from .completion_text_edit import CompletionTextEdit
 
@@ -121,7 +127,8 @@ class SeedLayout(QVBoxLayout):
         hbox = QHBoxLayout()
         if icon:
             logo = QLabel()
-            logo.setPixmap(QPixmap(":icons/seed.png").scaledToWidth(64, mode=Qt.SmoothTransformation))
+            logo.setPixmap(QPixmap(icon_path("seed.png"))
+                           .scaledToWidth(64, mode=Qt.SmoothTransformation))
             logo.setMaximumWidth(60)
             hbox.addWidget(logo)
         hbox.addWidget(self.seed_e)

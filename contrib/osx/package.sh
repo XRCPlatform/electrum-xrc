@@ -85,4 +85,4 @@ dmg dmg Electrum-XRC_uncompressed.dmg electrum-xrc-$VERSION.dmg || fail "Unable 
 rm Electrum-XRC_uncompressed.dmg
 
 echo "Done."
-md5sum electrum-xrc-$VERSION.dmg
+sha256sum electrum-xrc-$VERSION.dmg

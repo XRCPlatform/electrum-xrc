@@ -47,7 +47,7 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
         (os.path.join(usr_share, 'applications/'), ['electrum-xrc.desktop']),
-        (os.path.join(usr_share, icons_dirname), ['icons/electrum-xrc.png'])
+        (os.path.join(usr_share, icons_dirname), ['electrum/gui/icons/electrum-xrc.png']),
     ]
 
 extras_require = {
@@ -56,23 +56,6 @@ extras_require = {
     'gui': ['pyqt5'],
 }
 extras_require['full'] = [pkg for sublist in list(extras_require.values()) for pkg in sublist]
-
-
-class CustomInstallCommand(install):
-    def run(self):
-        install.run(self)
-        # potentially build Qt icons file
-        try:
-            import PyQt5
-        except ImportError:
-            pass
-        else:
-            try:
-                path = os.path.join(self.install_lib, "electrum/gui/qt/icons_rc.py")
-                if not os.path.exists(path):
-                    subprocess.call(["pyrcc5", "icons.qrc", "-o", path])
-            except Exception as e:
-                print('Warning: building icons file failed with {}'.format(e))
 
 
 setup(
@@ -96,6 +79,9 @@ setup(
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum-xrc.mo',
         ],
+        'electrum.gui': [
+            'icons/*',
+        ],
     },
     scripts=['electrum/electrum-xrc'],
     data_files=data_files,
@@ -103,9 +89,6 @@ setup(
     author="Thomas Voegtlin/Bitcoin Rhodium Developers",
     author_email="thomasv@electrum.org/dvbr3@protonmail.com",
     license="MIT Licence",
-    url="https://www.bitcoinrh.org",
-    long_description="""Lightweight Bitcoin Rhodium Wallet""",
-    cmdclass={
-        'install': CustomInstallCommand,
-    },
+    url="https://electrum.bitcoinrh.org",
+    long_description="""Lightweight Bitcoin Rhodium Wallet"""
 )
