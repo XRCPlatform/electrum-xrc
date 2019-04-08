@@ -23,7 +23,6 @@
 import os
 import threading
 from typing import Optional, Dict
-import x13_hash
 
 from . import util
 from .bitcoin import hash_encode, int_to_hex, rev_hex
@@ -76,17 +75,17 @@ def hash_header(header: dict, x13=False) -> str:
         return '0' * 64
     if header.get('prev_block_hash') is None:
         header['prev_block_hash'] = '00'*32
-    if x13:
-        return hash_for_pow(serialize_header(header))
-    else:
-        return hash_raw_header(serialize_header(header))
+    # if x13:
+    #     return hash_for_pow(serialize_header(header))
+    # else:
+    return hash_raw_header(serialize_header(header))
 
 
 def hash_raw_header(header: str) -> str:
     return hash_encode(sha256d(bfh(header)))
 
-def hash_for_pow(header: str) -> str:
-    return hash_encode(x13_hash.getPoWHash(bfh(header)))
+# def hash_for_pow(header: str) -> str:
+#     return hash_encode(x13_hash.getPoWHash(bfh(header)))
 
 # key: blockhash hex at forkpoint
 # the chain at some key is the best chain that includes the given hash
@@ -270,7 +269,7 @@ class Blockchain(util.PrintError):
 
     @classmethod
     def verify_header(cls, header: dict, prev_hash: str, target: int, expected_header_hash: str=None) -> None:
-        _proofhash = hash_header(header, x13=True)
+        #_proofhash = hash_header(header, x13=True)
         _hash = hash_header(header)
         if expected_header_hash and expected_header_hash != _hash:
             raise Exception("hash mismatches with expected: {} vs {}".format(expected_header_hash, _hash))
@@ -287,9 +286,9 @@ class Blockchain(util.PrintError):
             if bits != header.get('bits'):
                 raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
 
-        proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')
-        if header.get('block_height') >= TARGET_2_BLOCK_HEIGHT and proof_hash_as_num > target:
-            raise Exception(f"insufficient proof of work: {proof_hash_as_num} vs target {target}")
+        # proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')
+        # if header.get('block_height') >= TARGET_2_BLOCK_HEIGHT and proof_hash_as_num > target:
+        #     raise Exception(f"insufficient proof of work: {proof_hash_as_num} vs target {target}")
 
     def verify_chunk(self, index: int, data: bytes) -> None:
         num = len(data) // HEADER_SIZE
