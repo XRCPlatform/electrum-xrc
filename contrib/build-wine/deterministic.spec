@@ -16,7 +16,7 @@ home = 'C:\\electrum-xrc\\'
 
 # see https://github.com/pyinstaller/pyinstaller/issues/2005
 hiddenimports = []
-# hiddenimports += collect_submodules('trezorlib')
+hiddenimports += collect_submodules('trezorlib')
 # hiddenimports += collect_submodules('safetlib')
 # hiddenimports += collect_submodules('btchip')
 # hiddenimports += collect_submodules('keepkeylib')
@@ -25,12 +25,11 @@ hiddenimports += collect_submodules('ckcc')
 
 # safetlib imports PyQt5.Qt.  We use a local updated copy of pinmatrix.py until they
 # release a new version that includes https://github.com/archos-safe-t/python-safet/commit/b1eab3dba4c04fdfc1fcf17b66662c28c5f2380e
-hiddenimports.remove('safetlib.qt.pinmatrix')
+#hiddenimports.remove('safetlib.qt.pinmatrix')
 
 
 # Add libusb binary
-# binaries = [(PYHOME+"/libusb-1.0.dll", ".")]
-binaries = []
+binaries = [(PYHOME+"/libusb-1.0.dll", ".")]
 
 # Workaround for "Retro Look":
 binaries += [b for b in collect_dynamic_libs('PyQt5') if 'qwindowsvista' in b[0]]
@@ -63,8 +62,8 @@ a = Analysis([home+'run_electrum-xrc',
               home+'electrum/commands.py',
               home+'electrum/plugins/cosigner_pool/qt.py',
               home+'electrum/plugins/email_requests/qt.py',
-              # home+'electrum/plugins/trezor/client.py',
-              # home+'electrum/plugins/trezor/qt.py',
+              home+'electrum/plugins/trezor/clientbase.py',
+              home+'electrum/plugins/trezor/qt.py',
               # home+'electrum/plugins/safe_t/client.py',
               # home+'electrum/plugins/safe_t/qt.py',
               # home+'electrum/plugins/keepkey/qt.py',
