@@ -1,5 +1,5 @@
-AppImage binary for Electrum
-============================
+AppImage binary for Electrum-XRC
+================================
 
 This assumes an Ubuntu host, but it should not be too hard to adapt to another
 similar system. The docker commands should be executed in the project's root
@@ -17,18 +17,18 @@ folder.
 2. Build image
 
     ```
-    $ sudo docker build --no-cache -t electrum-appimage-builder-img contrib/build-linux/appimage
+    $ sudo docker build --no-cache -t electrum-xrc-appimage-builder-img contrib/build-linux/appimage
     ```
 
 3. Build binary
 
     ```
     $ sudo docker run -it \
-        --name electrum-appimage-builder-cont \
-        -v $PWD:/opt/electrum \
+        --name electrum-xrc-appimage-builder-cont \
+        -v $PWD:/opt/electrum-xrc \
         --rm \
-        --workdir /opt/electrum/contrib/build-linux/appimage \
-        electrum-appimage-builder-img \
+        --workdir /opt/electrum-xrc/contrib/build-linux/appimage \
+        electrum-xrc-appimage-builder-img \
         ./build.sh
     ```
 
@@ -38,4 +38,4 @@ folder.
 ## FAQ
 
 ### How can I see what is included in the AppImage?
-Execute the binary as follows: `./electrum*.AppImage --appimage-extract`
+Execute the binary as follows: `./electrum-xrc*.AppImage --appimage-extract`
