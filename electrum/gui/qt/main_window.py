@@ -237,14 +237,14 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.fetch_alias()
 
         # If the option hasn't been set yet
-        if config.get('check_updates') is None:
-            choice = QMessageBox.question(self,
-                                 "Electrum - " + _("Enable update check"),
-                                 _("For security reasons we advise that you always use the latest version of Electrum.") + " " +
-                                 _("Would you like to be notified when there is a newer version of Electrum available?"),
-                                 QMessageBox.Yes,
-                                 QMessageBox.No)
-            config.set_key('check_updates', choice == QMessageBox.Yes, save=True)
+        # if config.get('check_updates') is None:
+        #     choice = QMessageBox.question(self,
+        #                          "Electrum - " + _("Enable update check"),
+        #                          _("For security reasons we advise that you always use the latest version of Electrum.") + " " +
+        #                          _("Would you like to be notified when there is a newer version of Electrum available?"),
+        #                          QMessageBox.Yes,
+        #                          QMessageBox.No)
+        #     config.set_key('check_updates', choice == QMessageBox.Yes, save=True)
 
         if config.get('check_updates', False):
             # The references to both the thread and the window need to be stored somewhere
