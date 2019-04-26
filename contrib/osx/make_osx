@@ -106,9 +106,9 @@ info "Installing requirements..."
 python3 -m pip install -Ir ./contrib/deterministic-build/requirements.txt --user || \
 fail "Could not install requirements"
 
-# info "Installing hardware wallet requirements..."
-# python3 -m pip install -Ir ./contrib/deterministic-build/requirements-hw.txt --user || \
-# fail "Could not install hardware wallet requirements"
+info "Installing hardware wallet requirements..."
+python3 -m pip install -Ir ./contrib/deterministic-build/requirements-hw.txt --user || \
+fail "Could not install hardware wallet requirements"
 
 info "Building $PACKAGE..."
 python3 -m pip install --user . > /dev/null || fail "Could not build $PACKAGE"
@@ -121,7 +121,9 @@ for d in ~/Library/Python/ ~/.pyenv .; do
 done
 
 info "Building binary"
+cp electrum/gui/icons/electrum-xrc.icns .
 APP_SIGN="$APP_SIGN" pyinstaller --noconfirm --ascii --clean --name $VERSION contrib/osx/osx.spec || fail "Could not build binary"
+rm electrum-xrc.icns
 
 info "Adding bitcoin URI types to Info.plist"
 plutil -insert 'CFBundleURLTypes' \

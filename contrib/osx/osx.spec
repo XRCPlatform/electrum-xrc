@@ -5,7 +5,7 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules, coll
 import sys, os
 
 PACKAGE='Electrum-XRC'
-PYPKG='electrum-xrc'
+PYPKG='electrum'
 MAIN_SCRIPT='run_electrum-xrc'
 ICONS_FILE=PYPKG + '/gui/icons/electrum-xrc.icns'
 APP_SIGN = os.environ.get('APP_SIGN', '')
@@ -58,7 +58,7 @@ block_cipher = None
 
 # see https://github.com/pyinstaller/pyinstaller/issues/2005
 hiddenimports = []
-#hiddenimports += collect_submodules('trezorlib')
+hiddenimports += collect_submodules('trezorlib')
 #hiddenimports += collect_submodules('safetlib')
 #hiddenimports += collect_submodules('btchip')
 #hiddenimports += collect_submodules('keepkeylib')
@@ -67,7 +67,7 @@ hiddenimports += collect_submodules('ckcc')
 
 # safetlib imports PyQt5.Qt.  We use a local updated copy of pinmatrix.py until they
 # release a new version that includes https://github.com/archos-safe-t/python-safet/commit/b1eab3dba4c04fdfc1fcf17b66662c28c5f2380e
-hiddenimports.remove('safetlib.qt.pinmatrix')
+#hiddenimports.remove('safetlib.qt.pinmatrix')
 
 
 datas = [
@@ -77,7 +77,7 @@ datas = [
     (electrum + PYPKG + '/plugins', PYPKG + '/plugins'),
     (electrum + PYPKG + '/gui/icons', PYPKG + '/gui/icons'),
 ]
-#datas += collect_data_files('trezorlib')
+datas += collect_data_files('trezorlib')
 #datas += collect_data_files('safetlib')
 #datas += collect_data_files('btchip')
 #datas += collect_data_files('keepkeylib')
@@ -87,8 +87,8 @@ datas += collect_data_files('ckcc')
 datas += [(electrum + "contrib/osx/CalinsQRReader/build/Release/CalinsQRReader.app", "./contrib/osx/CalinsQRReader/build/Release/CalinsQRReader.app")]
 
 # Add libusb so Trezor and Safe-T mini will work
-#binaries = [(electrum + "contrib/osx/libusb-1.0.dylib", ".")]
-binaries = [(electrum + "contrib/osx/libsecp256k1.0.dylib", ".")]
+binaries = [(electrum + "contrib/osx/libusb-1.0.dylib", ".")]
+binaries += [(electrum + "contrib/osx/libsecp256k1.0.dylib", ".")]
 
 # Workaround for "Retro Look":
 binaries += [b for b in collect_dynamic_libs('PyQt5') if 'macstyle' in b[0]]
@@ -105,7 +105,7 @@ a = Analysis([electrum+ MAIN_SCRIPT,
               electrum+'electrum/commands.py',
               electrum+'electrum/plugins/cosigner_pool/qt.py',
               electrum+'electrum/plugins/email_requests/qt.py',
-              # electrum+'electrum/plugins/trezor/qt.py',
+              electrum+'electrum/plugins/trezor/qt.py',
               # electrum+'electrum/plugins/safe_t/client.py',
               # electrum+'electrum/plugins/safe_t/qt.py',
               # electrum+'electrum/plugins/keepkey/qt.py',
