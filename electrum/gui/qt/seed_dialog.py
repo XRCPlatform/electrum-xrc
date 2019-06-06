@@ -29,7 +29,7 @@ from PyQt5.QtWidgets import (QVBoxLayout, QCheckBox, QHBoxLayout, QLineEdit,
                              QLabel, QCompleter, QDialog)
 
 from electrum.i18n import _
-from electrum.mnemonic import Mnemonic
+from electrum.mnemonic import Mnemonic, seed_type
 import electrum.old_mnemonic
 from electrum.plugin import run_hook
 from electrum.bitcoin import is_b58_address
@@ -240,7 +240,6 @@ class SeedLayout(QVBoxLayout):
         return is_seed
 
     def on_edit(self):
-        from electrum.bitcoin import seed_type
         s = self.get_seed()
         is_good_seed = self.is_seed_test()
         if not self.is_bip39:
@@ -282,8 +281,14 @@ class KeysLayout(QVBoxLayout):
         return self.text_e.text()
 
     def on_edit(self):
-        b = self.is_valid(self.get_text())
-        self.parent.next_button.setEnabled(b)
+        valid = False
+        try:
+            valid = self.is_valid(self.get_text())
+        except Exception as e:
+            self.parent.next_button.setToolTip(f'{_("Error")}: {str(e)}')
+        else:
+            self.parent.next_button.setToolTip('')
+        self.parent.next_button.setEnabled(valid)
 
 
 class SeedDialog(WindowModalDialog):
