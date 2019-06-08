@@ -157,7 +157,7 @@ class BaseWizard(Logger):
         self.plugin = self.plugins.load_plugin('trustedcoin')
 
     def on_wallet_type(self, choice):
-        self.date['wallet_type'] = self.wallet_type = choice
+        self.data['wallet_type'] = self.wallet_type = choice
         if choice == 'standard' or choice == 'web_wallet_restore':
             action = 'choose_keystore'
         elif choice == 'multisig':
