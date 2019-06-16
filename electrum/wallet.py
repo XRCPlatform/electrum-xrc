@@ -1868,6 +1868,8 @@ class Wallet(object):
 
     @staticmethod
     def wallet_class(wallet_type):
+        if wallet_type == 'web_wallet_restore':
+            wallet_type = 'standard'
         if multisig_type(wallet_type):
             return Multisig_Wallet
         if wallet_type in wallet_constructors:
