@@ -624,6 +624,10 @@ class BaseWizard(Logger):
         storage.set_keystore_encryption(bool(password))
         if encrypt_storage:
             storage.set_password(password, enc_version=storage_enc_version)
+
+        if self.data['wallet_type'] == 'web_wallet_restore':
+            self.data['wallet_type'] = 'standard'
+
         for key, value in self.data.items():
             storage.put(key, value)
         storage.write()
