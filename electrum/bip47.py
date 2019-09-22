@@ -24,8 +24,12 @@ CHAIN_LEN = 32
 PAYLOAD_LEN = 80
 
 
-def make_point_from_privkey(priv):
-    return ecc.ECPubkey.from_point(priv * ecdsa.ecdsa.generator_secp256k1)
+def make_point_from_privkey(priv, pub=None):
+    if pub:
+        use_pub = pub
+    else:
+        use_pub = ecdsa.ecdsa.generator_secp256k1
+    return ecc.ECPubkey.from_point(priv * use_pub)
 
 
 def get_shared_key(aPriv, bPub):
@@ -87,7 +91,7 @@ class PaymentCode(object):
 
         payment_code = DecodeBase58Check(code)
         pcode_prefix = payment_code[0:1]
-        version = payment_code[2:1]
+        version = payment_code[2:3]
         chain_code = payment_code[36:68]
         public_key = payment_code[3:36]
 
@@ -116,7 +120,7 @@ class PaymentCode(object):
                                # explicitly have a parent BIP32Node. We are assuming
                                # this is the root from m/47'/x'/0
                                depth=0x03,
-                               fingerprint=bytes([54, 0xbe, 0xbb, 0xa1]),
+                               fingerprint=b'\xbeC\x99\xc4',
                                child_number=bytes(
                                    [0x80, 0x00, 0x00, 0x00])).to_xpub()
 
