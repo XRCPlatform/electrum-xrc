@@ -1,14 +1,16 @@
 from . import SequentialTestCase
 from electrum import keystore
-from electrum import bip47, bip32
+from electrum import bip47, bip32, constants
 from electrum.bitcoin import EncodeBase58Check, DecodeBase58Check
 
-KEYSTORE_A = keystore.from_bip39_seed('zero tomato region sorry one trip satoshi hotel lizard before gown script', '',
+constants.set_btc_mainnet()
+
+KEYSTORE_A = keystore.from_bip39_seed('response seminar brave tip suit recall often sound stick owner lottery motion', '',
                                       keystore.bip44_derivation(0, bip43_purpose=47), xtype='standard')
-KEYSTORE_B = keystore.from_bip39_seed('famous melody jar empty give output kitchen dinosaur verify monkey embody alone', '',
+KEYSTORE_B = keystore.from_bip39_seed('reward upper indicate eight swift arch injury crystal super wrestle already dentist', '',
                                       keystore.bip44_derivation(0, bip43_purpose=47), xtype='standard')
 
-KEYSTORE_A_PCODE = 'PM8TJcfgVBRBp9jesTcM4TRGPAEm3nF37kyxUbNJswWPqBF1FoiXRvTFQ9T5oumCsdLRB2BSyyUpV3aBMPS51Fripjzhazs7sPPVFEXnuN2Y5JZmp6gD'
+KEYSTORE_A_PCODE = 'PM8TJTLJbPRGxSbc8EJi42Wrr6QbNSaSSVJ5Y3E4pbCYiTHUskHg13935Ubb7q8tx9GVbh2UuRnBc3WSyJHhUrw8KhprKnn9eDznYGieTzFcwQRya4GA'
 
 # k = BIP32Node.from_xkey(mpk)
 # a = keystore.from_xpub(mpk) or k = BIP32_KeyStore() and k.xpub = mpk

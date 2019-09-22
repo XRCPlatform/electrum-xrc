@@ -1,8 +1,8 @@
 import hmac
 import ecdsa
 from hashlib import sha512
-from electrum.bitcoin import EncodeBase58Check, DecodeBase58Check
-from electrum import keystore, bip32, ecc, util
+from . import keystore, bip32, ecc, util, bitcoin
+from .bitcoin import EncodeBase58Check, DecodeBase58Check
 
 # Based off of Samourai implementation : https://github.com/Samourai-Wallet/ExtLibJ/tree/develop/java/com/samourai/wallet/bip47/rpc
 
@@ -12,7 +12,6 @@ class PaymentCodeError(Exception):
 
 
 class BIP47_KeyStore(keystore.BIP32_KeyStore):
-
     type = 'bip47'
 
 
