@@ -9,6 +9,8 @@ from electrum.interface import Interface
 from electrum.crypto import sha256
 from electrum.util import bh2u
 
+from electrum import constants
+constants.set_btc_mainnet()
 
 class MockTaskGroup:
     async def spawn(self, x): return

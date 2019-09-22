@@ -30,9 +30,9 @@ class TestCaseForTestnet(SequentialTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        constants.set_testnet()
+        constants.set_btc_testnet()
 
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
-        constants.set_mainnet()
+        constants.set_btc_mainnet()

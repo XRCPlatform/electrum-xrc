@@ -8,6 +8,8 @@ from electrum.wallet import restore_wallet_from_text
 
 from . import TestCaseForTestnet
 
+from electrum import constants
+constants.set_btc_mainnet()
 
 class TestCommands(unittest.TestCase):
 

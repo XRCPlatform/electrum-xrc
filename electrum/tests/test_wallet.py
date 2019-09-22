@@ -18,6 +18,8 @@ from electrum.json_db import JsonDB
 
 from . import SequentialTestCase
 
+from electrum import constants
+constants.set_btc_mainnet()
 
 class FakeSynchronizer(object):
 
