@@ -1,5 +1,6 @@
 import hmac
 import ecdsa
+import hashlib
 from hashlib import sha512
 from . import keystore, bip32, ecc, util, bitcoin
 from .bitcoin import EncodeBase58Check, DecodeBase58Check
@@ -20,7 +21,7 @@ PUBLIC_KEY_X_OFFSET = 3
 CHAIN_OFFSET = 35
 PUBLIC_KEY_X_LEN = 32
 PUBLIC_KEY_Y_LEN = 1
-CHAIN_LEN = 32
+CHAIN_LEN = 3
 PAYLOAD_LEN = 80
 
 
@@ -45,7 +46,6 @@ class PaymentCode(object):
     The intent is to represent and re-encode the payment code, to derive the base
     addresses and to setup notification transactions.
     """
-    master_public_key: str
     public_key: bytes
     chain_code: bytes
 
@@ -54,8 +54,6 @@ class PaymentCode(object):
          - master_public_key: Base58Check version of master public key.
          - version: Payment code version. Defaults to 1.
         """
-
-        self.master_public_key = None
         self.public_key = None
         self.chain_code = None
 
@@ -63,8 +61,6 @@ class PaymentCode(object):
             raise PaymentCodeError(
                 "master_public_key must be length of 111 bytes")
         elif master_public_key:
-            self.master_public_key = master_public_key
-
             self.node = bip32.BIP32Node.from_xkey(master_public_key)
             self.chain_code = self.node.chaincode
             self.public_key = self.node.eckey.get_public_key_bytes()
@@ -109,20 +105,9 @@ class PaymentCode(object):
         )
 
     def get_master_public_key(self):
-        if self.master_public_key:
-            return self.master_public_key
-
-        # similar to call BIP32Node.from_xkey(base_mpk)
         return bip32.BIP32Node(xtype='standard',  # fixing it to xpub only for now
                                eckey=ecc.ECPubkey(self.public_key),
-                               chaincode=self.chain_code,
-                               # depth and fingerprint is not available unless you
-                               # explicitly have a parent BIP32Node. We are assuming
-                               # this is the root from m/47'/x'/0
-                               depth=0x03,
-                               fingerprint=b'\xbeC\x99\xc4',
-                               child_number=bytes(
-                                   [0x80, 0x00, 0x00, 0x00])).to_xpub()
+                               chaincode=self.chain_code)
 
     def generate(self):
         return bytes([
@@ -190,41 +175,36 @@ class PaymentCode(object):
         return bytes(*[b[idx] ^ val for idx, val in a])
 
 
-class SecretPoint(object):
-    def __init__(self, priv: bytes, pub: bytes):
-        self.priv = priv
-        self.pub = pub
-
-
 class PaymentAddress(object):
 
-    def __init__(self, payment_code: PaymentCode, index: int, private_key: bytes):
-        self.payment_code = payment_code
-        self.index = index
-        self.private_key = private_key  # this is a key from my HD wallet
+    def __init__(self, keystore: bip32.BIP32_KeyStore, payment_code: PaymentCode, payment_code_index: int):
+        self.private = bip32.BIP32Node.from_xkey(
+            keystore.xprv).subkey_at_private_derivation('0').eckey.get_secret_bytes()
+        self.public = payment_code.get_master_public_key(
+        ).subkey_at_public_derivation(payment_code_index)
 
-    def send_ec_key(self):
-        pass
+        # S = aB
+        self.secret = int.from_bytes(
+            self.private, 'big') * self._convert_to_point(self.public.eckey)
 
-    def receive_ec_key(self):
-        pass
+        # Sx (shared secret unhashed)
+        self.secretX = self.secret.x().to_bytes(32, 'big')
 
-    def shared_secret(self):
-        # return secretPointFactory.newSecretPoint(privKey, paymentCode.addressAt(index, params).getPubKey());
+        # SHA256(Sx)
+        self.hash = hashlib.sha256(self.secretX).digest()
 
-        pass
+        # B' = B + sG
+        self.sec_point = self._convert_to_point(
+            self.public.eckey) + (int.from_bytes(hash, 'big') * ecc.generator_secp256k1)
 
-    def secret_point(self):
-        pass
+        self.public_key = ecc.ECPubkey.from_point(
+            sec_point).get_public_key_bytes().hex()
 
-    def ec_point(self):
-        return ecc.ECPubkey(self.payment_code.address_at(0))
+    def as_p2pkh(self):
+        return bitcoin.pubkey_to_address('p2pkh', self.public_key)
 
-    def hashed_shared_secret(self):
-        pass
+    def as_p2sh(self):
+        return bitcoin.pubkey_to_address('p2sh', self.public_key)
 
-    def sG(self, s: int):
-        pass
-
-    def add_secp256k1(self, b1: int, b2: int):
-        self
+    def _convert_to_point(self, eckey):
+        return ecc.Point(curve=ecc.curve_secp256k1, x=eckey.point()[0], y=eckey.point()[1])
