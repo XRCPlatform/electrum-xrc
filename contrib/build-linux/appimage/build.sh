@@ -120,6 +120,11 @@ mkdir -p "$CACHEDIR/pip_cache"
 info "copying zbar"
 cp "/usr/lib/libzbar.so.0" "$APPDIR/usr/lib/libzbar.so.0"
 
+info "build and install x13"
+pushd "$PROJECT_ROOT/x13-hash"
+make linux
+cp libx13.so "$APPDIR/usr/lib"
+popd
 
 info "desktop integration."
 cp "$PROJECT_ROOT/electrum-xrc.desktop" "$APPDIR/electrum-xrc.desktop"

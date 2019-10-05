@@ -1,0 +1,36 @@
+SHELL = /bin/sh
+CC    = g++
+WINCC = i686-w64-mingw32
+FLAGS        = -std=gnu99 -Isrc
+WINFLAGS     = -c -DBUILD_DLL
+CFLAGS       = -fPIC -shared -pedantic -Wall -Wextra -ggdb3 -fpermissive
+CFLAGSWIN    = -shared -o $(WINTARGET) libx13.o -Wl, --out-implib,libx13.a
+DEBUGFLAGS   = -O0 -D _DEBUG
+RELEASEFLAGS = -O2 -D NDEBUG -fwhole-program
+
+TARGET  = libx13.so
+TARGETWIN = libx13.dll
+SOURCES = x13.c $(shell echo sha3/*.c)
+HEADERS = x13.h $(shell echo sha3/*.h)
+OBJECTS = $(SOURCES:.c=.o)
+
+PREFIX = $(DESTDIR)/usr/local
+BINDIR = $(PREFIX)/bin
+
+all: linux win mac
+
+mac: linux
+
+linux: $(OBJECTS)
+	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) -o $(TARGET) $(OBJECTS)
+
+win:
+	$(WINCC)-g++ -c -D_WIN32 -fpermissive $(SOURCES)
+	$(WINCC)-g++ -shared -o $(TARGETWIN)  *.o -Wl,--out-implib,libx13.a
+	$(WINCC)-strip libx13.dll
+
+clean:
+	rm libx13.so libx13.dll *.o
+
+install:
+	cp libx13.so $PREFIX/libx13.so

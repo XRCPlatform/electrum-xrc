@@ -32,16 +32,12 @@ from .util import bfh, bh2u
 from .simple_config import SimpleConfig
 from .logging import get_logger, Logger
 
+from .x13 import get_pow_hash
+
 
 _logger = get_logger(__name__)
 
 HEADER_SIZE = 80  # bytes
-MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-
-# Hard fork change at 1649
-MAX_TARGET_2 = 0x0000000000092489000000000000000000000000000000000000000000000000
-TARGET_2_BLOCK_HEIGHT = 1649
-
 class MissingHeader(Exception):
     pass
 
@@ -78,17 +74,17 @@ def hash_header(header: dict, x13=False) -> str:
         return '0' * 64
     if header.get('prev_block_hash') is None:
         header['prev_block_hash'] = '00'*32
-    # if x13:
-    #     return hash_for_pow(serialize_header(header))
-    # else:
-    return hash_raw_header(serialize_header(header))
+    if x13:
+        return hash_for_pow(serialize_header(header))
+    else:
+        return hash_raw_header(serialize_header(header))
 
 
 def hash_raw_header(header: str) -> str:
     return hash_encode(sha256d(bfh(header)))
 
-# def hash_for_pow(header: str) -> str:
-#     return hash_encode(x13_hash.getPoWHash(bfh(header)))
+def hash_for_pow(header: str) -> str:
+    return hash_encode(get_pow_hash(bfh(header)))
 
 # key: blockhash hex at forkpoint
 # the chain at some key is the best chain that includes the given hash
@@ -294,11 +290,10 @@ class Blockchain(Logger):
         XRC had a fork at 1648 with a higher diff. It didn't adjust until block 4032.
         Adjustments afterwards are at normal periods.
         """
-        return header.get('block_height') >= TARGET_2_BLOCK_HEIGHT and header.get('block_height') < 4032
+        return header.get('block_height') >= constants.net.TARGET_2_BLOCK_HEIGHT and header.get('block_height') < 4032
 
     @classmethod
     def verify_header(cls, header: dict, prev_hash: str, target: int, expected_header_hash: str=None) -> None:
-        #_proofhash = hash_header(header, x13=True)
         _hash = hash_header(header)
         if expected_header_hash and expected_header_hash != _hash:
             raise Exception("hash mismatches with expected: {} vs {}".format(expected_header_hash, _hash))
@@ -307,7 +302,7 @@ class Blockchain(Logger):
         if constants.net.TESTNET:
             return
         if cls._is_in_initial_difficulty_adjustment_with_fork(header):
-            bits = cls.target_to_bits(MAX_TARGET_2)
+            bits = cls.target_to_bits(constants.net.MAX_TARGET_2)
             if bits != header.get('bits'):
                 raise Exception("bits mistmatch: %s vs %s (on fork)" % (bits, header.get('bits')))
         else:
@@ -315,9 +310,10 @@ class Blockchain(Logger):
             if bits != header.get('bits'):
                 raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
 
-        # proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')
-        # if header.get('block_height') >= TARGET_2_BLOCK_HEIGHT and proof_hash_as_num > target:
-        #     raise Exception(f"insufficient proof of work: {proof_hash_as_num} vs target {target}")
+        _proofhash = hash_header(header, x13=True)
+        proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')        
+        if header.get('block_height') >= constants.net.TARGET_2_BLOCK_HEIGHT and proof_hash_as_num > target:
+            raise Exception(f"insufficient proof of work: {proof_hash_as_num} vs target {target}")
 
     def verify_chunk(self, index: int, data: bytes) -> None:
         num = len(data) // HEADER_SIZE
@@ -517,9 +513,9 @@ class Blockchain(Logger):
         if constants.net.TESTNET:
             return 0
         if index == -1:
-            return MAX_TARGET
+            return constants.net.MAX_TARGET
         if index == 1648:
-            return MAX_TARGET_2
+            return constants.net.MAX_TARGET_2
         if index < len(self.checkpoints):
             h, t = self.checkpoints[index]
             return t
@@ -534,7 +530,7 @@ class Blockchain(Logger):
         nTargetTimespan = 14 * 24 * 60 * 60
         nActualTimespan = max(nActualTimespan, nTargetTimespan // 4)
         nActualTimespan = min(nActualTimespan, nTargetTimespan * 4)
-        new_target = min(MAX_TARGET, (target * nActualTimespan) // nTargetTimespan)
+        new_target = min(constants.net.MAX_TARGET, (target * nActualTimespan) // nTargetTimespan)
         # not any target can be represented in 32 bits:
         new_target = self.bits_to_target(self.target_to_bits(new_target))
         return new_target

@@ -11,6 +11,7 @@ electrum/locale/
 *_trial_temp
 packages
 env/
+buildenv/
 .buildozer/
 bin/
 /app.fil
@@ -37,6 +38,10 @@ contrib/build-wine/docker/Release.key
 contrib/build-wine/electrum_data
 contrib/build-wine/tmp
 *.dylib
+*.o
+*.dll
+*.so
+*.a
 contrib/downloads
 
 # OS X

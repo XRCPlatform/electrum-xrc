@@ -25,10 +25,12 @@ if [ -d ./electrum-xrc ]; then
     rm ./electrum-xrc -rf
 fi
 
-git clone git@gitlab.com:bitcoinrh/electrum-xrc
+git clone https://gitlab.com/bitcoinrh/electrum-btr electrum-xrc
 popd
 
 pushd $WINEPREFIX/drive_c/electrum-xrc
+
+pushd x13-hash && make win && mv libx13.dll $WINEPREFIX/drive_c/tmp && popd
 
 # Load electrum-locale for this release
 git submodule init

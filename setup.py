@@ -57,7 +57,6 @@ extras_require = {
 }
 extras_require['full'] = [pkg for sublist in list(extras_require.values()) for pkg in sublist]
 
-
 setup(
     name="Electrum-XRC",
     version=version.ELECTRUM_VERSION,
@@ -74,7 +73,7 @@ setup(
         'electrum': 'electrum'
     },
     package_data={
-        '': ['*.txt', '*.json', '*.ttf', '*.otf'],
+        '': ['*.txt', '*.json', '*.ttf', '*.otf', 'x13-hash/libx13.so'],
         'electrum': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum-xrc.mo',

@@ -22,6 +22,7 @@ RUN apt-get update -q && \
         gettext=0.18.3.1-1ubuntu3.1 \
         libzbar0=0.10+doc-9build1  \
         faketime=0.9.5-2 \
+        build-essential \
         && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
