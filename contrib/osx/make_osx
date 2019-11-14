@@ -92,6 +92,12 @@ make
 popd
 cp $BUILDDIR/secp256k1/.libs/libsecp256k1.0.dylib contrib/osx
 
+info "Building libx13"
+pushd $src_dir/x13-hash
+make mac
+popd
+cp $src_dir/x13-hash/x13.dylib contrib/osx
+
 info "Building CalinsQRReader..."
 d=contrib/osx/CalinsQRReader
 pushd $d

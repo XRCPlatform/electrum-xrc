@@ -1,5 +1,5 @@
 SHELL = /bin/sh
-CC    = g++
+CC    = gcc
 WINCC = i686-w64-mingw32
 FLAGS        = -std=gnu99 -Isrc
 WINFLAGS     = -c -DBUILD_DLL
@@ -30,7 +30,7 @@ win:
 	$(WINCC)-strip libx13.dll
 
 clean:
-	rm libx13.so libx13.dll *.o
+	rm libx13.so libx13.dll *.o sha3/*.o
 
 install:
 	cp libx13.so $PREFIX/libx13.so
