@@ -1,8 +1,5 @@
 #!/bin/bash
 
-REV=x13
-pwd
-
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 apt-get update
@@ -17,7 +14,6 @@ FRESH_CLONE=fresh_clone && \
         git clone https://gitlab.com/bitcoinrh/electrum-btr.git && \
         cd electrum-btr
 
-git checkout $REV
 docker run -it \
         --name electrum-wine-builder-cont \
         -v $PWD:/opt/wine64/drive_c/electrum \

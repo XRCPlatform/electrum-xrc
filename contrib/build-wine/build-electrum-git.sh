@@ -20,7 +20,12 @@ here="$(dirname "$(readlink -e "$0")")"
 
 . "$CONTRIB"/build_tools_util.sh
 
-pushd $WINEPREFIX/drive_c/electrum-xrc
+pushd $WINEPREFIX/drive_c/electrum
+
+info "BUILDING X13 HASH LIBRARY"
+pushd x13-hash
+make win
+popd
 
 VERSION=`git describe --tags --dirty --always`
 info "Last commit: $VERSION"
@@ -33,7 +38,7 @@ if ! which msgfmt > /dev/null 2>&1; then
     fail "Please install gettext"
 fi
 for i in ./locale/*; do
-    dir=$WINEPREFIX/drive_c/electrum-xrc/electrum/$i/LC_MESSAGES
+    dir=$WINEPREFIX/drive_c/electrum/electrum/$i/LC_MESSAGES
     mkdir -p $dir
     msgfmt --output-file=$dir/electrum-xrc.mo $i/electrum-xrc.po || true
 done

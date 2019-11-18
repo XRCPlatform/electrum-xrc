@@ -12,7 +12,7 @@ else:
 
 PYHOME = 'c:/python3'
 
-home = 'C:\\electrum-xrc\\'
+home = 'C:\\electrum\\'
 
 # see https://github.com/pyinstaller/pyinstaller/issues/2005
 hiddenimports = []
@@ -37,7 +37,7 @@ binaries += [b for b in collect_dynamic_libs('PyQt5')
              if 'qwindowsvista' in b[0]]
 
 binaries += [('C:/tmp/libsecp256k1.dll', '.')]
-binaries += [('C:/tmp/libx13.dll', '.')]
+binaries += [(home+'x13-hash/libx13.dll', '.')]
 
 datas = [
     (home+'electrum/*.json', 'electrum'),
@@ -71,8 +71,7 @@ a = Analysis([home+'run_electrum-xrc',
               home+'electrum/plugins/safe_t/qt.py',
               home+'electrum/plugins/keepkey/qt.py',
               home+'electrum/plugins/ledger/qt.py',
-              home+'electrum/plugins/coldcard/qt.py',
-              home+'packages/requests/utils.py'
+              home+'electrum/plugins/coldcard/qt.py'
               ],
              binaries=binaries,
              datas=datas,
