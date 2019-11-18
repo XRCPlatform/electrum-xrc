@@ -47,7 +47,7 @@ hook_names = set()
 hooks = {}
 
 CURRENT_PLUGINS = [
-    'email_requests', 'revealer', 'virtualkeyboard', 'trezor'
+    'email_requests', 'revealer', 'virtualkeyboard', 'trezor', 'ledger'
 ]
 
 class Plugins(DaemonThread):

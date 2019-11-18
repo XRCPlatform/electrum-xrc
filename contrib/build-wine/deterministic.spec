@@ -17,23 +17,24 @@ home = 'C:\\electrum-xrc\\'
 # see https://github.com/pyinstaller/pyinstaller/issues/2005
 hiddenimports = []
 hiddenimports += collect_submodules('trezorlib')
-# hiddenimports += collect_submodules('safetlib')
-# hiddenimports += collect_submodules('btchip')
-# hiddenimports += collect_submodules('keepkeylib')
+hiddenimports += collect_submodules('safetlib')
+hiddenimports += collect_submodules('btchip')
+hiddenimports += collect_submodules('keepkeylib')
 hiddenimports += collect_submodules('websocket')
 hiddenimports += collect_submodules('ckcc')
 hiddenimports += ['PyQt5.QtPrintSupport']  # needed by Revealer
 
 # safetlib imports PyQt5.Qt.  We use a local updated copy of pinmatrix.py until they
 # release a new version that includes https://github.com/archos-safe-t/python-safet/commit/b1eab3dba4c04fdfc1fcf17b66662c28c5f2380e
-#hiddenimports.remove('safetlib.qt.pinmatrix')
+# hiddenimports.remove('safetlib.qt.pinmatrix')
 
 
 # Add libusb binary
 binaries = [(PYHOME+"/libusb-1.0.dll", ".")]
 
 # Workaround for "Retro Look":
-binaries += [b for b in collect_dynamic_libs('PyQt5') if 'qwindowsvista' in b[0]]
+binaries += [b for b in collect_dynamic_libs('PyQt5')
+             if 'qwindowsvista' in b[0]]
 
 binaries += [('C:/tmp/libsecp256k1.dll', '.')]
 binaries += [('C:/tmp/libx13.dll', '.')]
@@ -66,12 +67,12 @@ a = Analysis([home+'run_electrum-xrc',
               home+'electrum/plugins/email_requests/qt.py',
               home+'electrum/plugins/trezor/clientbase.py',
               home+'electrum/plugins/trezor/qt.py',
-              # home+'electrum/plugins/safe_t/client.py',
-              # home+'electrum/plugins/safe_t/qt.py',
-              # home+'electrum/plugins/keepkey/qt.py',
-              # home+'electrum/plugins/ledger/qt.py',
-              # home+'electrum/plugins/coldcard/qt.py',
-              #home+'packages/requests/utils.py'
+              home+'electrum/plugins/safe_t/client.py',
+              home+'electrum/plugins/safe_t/qt.py',
+              home+'electrum/plugins/keepkey/qt.py',
+              home+'electrum/plugins/ledger/qt.py',
+              home+'electrum/plugins/coldcard/qt.py',
+              home+'packages/requests/utils.py'
               ],
              binaries=binaries,
              datas=datas,
@@ -87,8 +88,8 @@ for d in a.datas:
         break
 
 # Strip out parts of Qt that we never use. Reduces binary size by tens of MBs. see #4815
-qt_bins2remove=('qt5web', 'qt53d', 'qt5game', 'qt5designer', 'qt5quick',
-                'qt5location', 'qt5test', 'qt5xml', r'pyqt5\qt\qml\qtquick')
+qt_bins2remove = ('qt5web', 'qt53d', 'qt5game', 'qt5designer', 'qt5quick',
+                  'qt5location', 'qt5test', 'qt5xml', r'pyqt5\qt\qml\qtquick')
 print("Removing Qt binaries:", *qt_bins2remove)
 for x in a.binaries.copy():
     for r in qt_bins2remove:
@@ -96,7 +97,7 @@ for x in a.binaries.copy():
             a.binaries.remove(x)
             print('----> Removed x =', x)
 
-qt_data2remove=(r'pyqt5\qt\translations\qtwebengine_locales', )
+qt_data2remove = (r'pyqt5\qt\translations\qtwebengine_locales', )
 print("Removing Qt datas:", *qt_data2remove)
 for x in a.datas.copy():
     for r in qt_data2remove:
@@ -105,7 +106,8 @@ for x in a.datas.copy():
             print('----> Removed x =', x)
 
 # hotfix for #3171 (pre-Win10 binaries)
-a.binaries = [x for x in a.binaries if not x[1].lower().startswith(r'c:\windows')]
+a.binaries = [
+    x for x in a.binaries if not x[1].lower().startswith(r'c:\windows')]
 
 pyz = PYZ(a.pure)
 
@@ -124,14 +126,15 @@ exe_standalone = EXE(
     upx=False,
     icon=home+'electrum/gui/icons/electrum-xrc.ico',
     console=False)
-    # console=True makes an annoying black box pop up, but it does make Electrum output command line commands, with this turned off no output will be given but commands can still be used
+# console=True makes an annoying black box pop up, but it does make Electrum output command line commands, with this turned off no output will be given but commands can still be used
 
 exe_portable = EXE(
     pyz,
     a.scripts,
     a.binaries,
-    a.datas + [ ('is_portable', 'README.md', 'DATA' ) ],
-    name=os.path.join('build\\pyi.win32\\electrum-xrc', cmdline_name + "-portable.exe"),
+    a.datas + [('is_portable', 'README.md', 'DATA')],
+    name=os.path.join('build\\pyi.win32\\electrum-xrc',
+                      cmdline_name + "-portable.exe"),
     debug=False,
     strip=None,
     upx=False,
@@ -161,7 +164,8 @@ exe_testnet = EXE(
     a.binaries,
     a.datas + [('is_testnet', 'README.md', 'DATA'),
                ('is_portable', 'README.md', 'DATA')],
-    name=os.path.join('build  \\pyi.win32\\electrum-xrc', cmdline_name + "-testnet.exe"),
+    name=os.path.join('build  \\pyi.win32\\electrum-xrc',
+                      cmdline_name + "-testnet.exe"),
     debug=False,
     strip=None,
     upx=False,
