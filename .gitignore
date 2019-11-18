@@ -51,3 +51,4 @@ contrib/downloads
 # wallet data
 electrum-btr_data
 electrum-xrc_data
+contrib/android_debug.keystore

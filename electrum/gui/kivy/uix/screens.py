@@ -2,7 +2,8 @@ from weakref import ref
 from decimal import Decimal
 import re
 import datetime
-import traceback, sys
+import traceback
+import sys
 
 from kivy.app import App
 from kivy.cache import Cache
@@ -20,19 +21,22 @@ from kivy.utils import platform
 
 from electrum.util import profiler, parse_URI, format_time, InvalidPassword, NotEnoughFunds, Fiat
 from electrum import bitcoin
-from electrum.transaction import TxOutput
-from electrum.util import send_exception_to_crash_reporter
+from electrum.transaction import TxOutput, Transaction, tx_from_str
+from electrum.util import send_exception_to_crash_reporter, parse_URI, InvalidBitcoinURI
 from electrum.paymentrequest import PR_UNPAID, PR_PAID, PR_UNKNOWN, PR_EXPIRED
 from electrum.plugin import run_hook
 from electrum.wallet import InternalAddressCorruption
+from electrum import simple_config
 
 from .context_menu import ContextMenu
 
 
 from electrum.gui.kivy.i18n import _
 
+
 class HistoryRecycleView(RecycleView):
     pass
+
 
 class CScreen(Factory.Screen):
     __events__ = ('on_activate', 'on_deactivate', 'on_enter', 'on_leave')
@@ -63,7 +67,8 @@ class CScreen(Factory.Screen):
 
     @profiler
     def load_screen(self):
-        self.screen = Builder.load_file('electrum/gui/kivy/uix/ui_screens/' + self.kvname + '.kv')
+        self.screen = Builder.load_file(
+            'electrum/gui/kivy/uix/ui_screens/' + self.kvname + '.kv')
         self.add_widget(self.screen)
         self.loaded = True
         self.update()
@@ -105,6 +110,7 @@ TX_ICONS = [
     "confirmed",
 ]
 
+
 class HistoryScreen(CScreen):
 
     tab = ObjectProperty(None)
@@ -114,7 +120,8 @@ class HistoryScreen(CScreen):
     def __init__(self, **kwargs):
         self.ra_dialog = None
         super(HistoryScreen, self).__init__(**kwargs)
-        self.menu_actions = [ ('Label', self.label_dialog), ('Details', self.show_tx)]
+        self.menu_actions = [('Label', self.label_dialog),
+                             ('Details', self.show_tx)]
 
     def show_tx(self, obj):
         tx_hash = obj.tx_hash
@@ -127,6 +134,7 @@ class HistoryScreen(CScreen):
         from .dialogs.label_dialog import LabelDialog
         key = obj.tx_hash
         text = self.app.wallet.get_label(key)
+
         def callback(text):
             self.app.wallet.set_label(key, text)
             self.update()
@@ -134,9 +142,11 @@ class HistoryScreen(CScreen):
         d.open()
 
     def get_card(self, tx_hash, tx_mined_status, value, balance):
-        status, status_str = self.app.wallet.get_tx_status(tx_hash, tx_mined_status)
+        status, status_str = self.app.wallet.get_tx_status(
+            tx_hash, tx_mined_status)
         icon = "atlas://electrum/gui/kivy/theming/light/" + TX_ICONS[status]
-        label = self.app.wallet.get_label(tx_hash) if tx_hash else _('Pruned transaction outputs')
+        label = self.app.wallet.get_label(
+            tx_hash) if tx_hash else _('Pruned transaction outputs')
         ri = {}
         ri['screen'] = self
         ri['tx_hash'] = tx_hash
@@ -146,11 +156,14 @@ class HistoryScreen(CScreen):
         ri['confirmations'] = tx_mined_status.conf
         if value is not None:
             ri['is_mine'] = value < 0
-            if value < 0: value = - value
+            if value < 0:
+                value = - value
             ri['amount'] = self.app.format_amount_and_units(value)
             if self.app.fiat_unit:
                 fx = self.app.fx
-                fiat_value = value / Decimal(bitcoin.COIN) * self.app.wallet.price_at_timestamp(tx_hash, fx.timestamp_rate)
+                fiat_value = value / \
+                    Decimal(
+                        bitcoin.COIN) * self.app.wallet.price_at_timestamp(tx_hash, fx.timestamp_rate)
                 fiat_value = Fiat(fiat_value, fx.ccy)
                 ri['quote_text'] = fiat_value.to_ui_string()
         return ri
@@ -173,16 +186,16 @@ class SendScreen(CScreen):
         if not self.app.wallet:
             self.payment_request_queued = text
             return
-        import electrum
         try:
-            uri = electrum.util.parse_URI(text, self.app.on_pr)
-        except:
-            self.app.show_info(_("Not a Bitcoin Rhodium URI"))
+            uri = parse_URI(text, self.app.on_pr, loop=self.app.asyncio_loop)
+        except InvalidBitcoinURI as e:
+            self.app.show_info(_("Error parsing URI") + f":\n{e}")
             return
         amount = uri.get('amount')
         self.screen.address = uri.get('address', '')
         self.screen.message = uri.get('message', '')
-        self.screen.amount = self.app.format_amount_and_units(amount) if amount else ''
+        self.screen.amount = self.app.format_amount_and_units(
+            amount) if amount else ''
         self.payment_request = None
         self.screen.is_pr = False
 
@@ -201,7 +214,8 @@ class SendScreen(CScreen):
     def set_request(self, pr):
         self.screen.address = pr.get_requestor()
         amount = pr.get_amount()
-        self.screen.amount = self.app.format_amount_and_units(amount) if amount else ''
+        self.screen.amount = self.app.format_amount_and_units(
+            amount) if amount else ''
         self.screen.message = pr.get_memo()
         if pr.is_pr():
             self.screen.is_pr = True
@@ -218,8 +232,9 @@ class SendScreen(CScreen):
             return
         # save address as invoice
         from electrum.paymentrequest import make_unsigned_request, PaymentRequest
-        req = {'address':self.screen.address, 'memo':self.screen.message}
-        amount = self.app.get_amount(self.screen.amount) if self.screen.amount else 0
+        req = {'address': self.screen.address, 'memo': self.screen.message}
+        amount = self.app.get_amount(
+            self.screen.amount) if self.screen.amount else 0
         req['amount'] = amount
         pr = make_unsigned_request(req).SerializeToString()
         pr = PaymentRequest(pr)
@@ -233,11 +248,22 @@ class SendScreen(CScreen):
             self.payment_request = None
 
     def do_paste(self):
-        contents = self.app._clipboard.paste()
-        if not contents:
+        data = self.app._clipboard.paste()
+        if not data:
             self.app.show_info(_("Clipboard is empty"))
             return
-        self.set_URI(contents)
+        # try to decode as transaction
+        try:
+            raw_tx = tx_from_str(data)
+            tx = Transaction(raw_tx)
+            tx.deserialize()
+        except:
+            tx = None
+        if tx:
+            self.app.tx_dialog(tx)
+            return
+        # try to decode as URI/address
+        self.set_URI(data)
 
     def do_send(self):
         if self.screen.is_pr:
@@ -248,22 +274,26 @@ class SendScreen(CScreen):
         else:
             address = str(self.screen.address)
             if not address:
-                self.app.show_error(_('Recipient not specified.') + ' ' + _('Please scan a Bitcoin Rhodium address or a payment request'))
+                self.app.show_error(_('Recipient not specified.') + ' ' + _(
+                    'Please scan a Bitcoin Rhodium address or a payment request'))
                 return
             if not bitcoin.is_address(address):
-                self.app.show_error(_('Invalid Bitcoin Rhodium Address') + ':\n' + address)
+                self.app.show_error(
+                    _('Invalid Bitcoin Rhodium Address') + ':\n' + address)
                 return
             try:
                 amount = self.app.get_amount(self.screen.amount)
             except:
-                self.app.show_error(_('Invalid amount') + ':\n' + self.screen.amount)
+                self.app.show_error(_('Invalid amount') +
+                                    ':\n' + self.screen.amount)
                 return
             outputs = [TxOutput(bitcoin.TYPE_ADDRESS, address, amount)]
         message = self.screen.message
-        amount = sum(map(lambda x:x[2], outputs))
+        amount = sum(map(lambda x: x[2], outputs))
         if self.app.electrum_config.get('use_rbf'):
             from .dialogs.question import Question
-            d = Question(_('Should this transaction be replaceable?'), lambda b: self._do_send(amount, message, outputs, b))
+            d = Question(_('Should this transaction be replaceable?'),
+                         lambda b: self._do_send(amount, message, outputs, b))
             d.open()
         else:
             self._do_send(amount, message, outputs, False)
@@ -273,7 +303,8 @@ class SendScreen(CScreen):
         config = self.app.electrum_config
         coins = self.app.wallet.get_spendable_coins(None, config)
         try:
-            tx = self.app.wallet.make_unsigned_transaction(coins, outputs, config, None)
+            tx = self.app.wallet.make_unsigned_transaction(
+                coins, outputs, config, None)
         except NotEnoughFunds:
             self.app.show_error(_("Not enough funds"))
             return
@@ -285,28 +316,34 @@ class SendScreen(CScreen):
             tx.set_rbf(True)
         fee = tx.get_fee()
         msg = [
-            _("Amount to be sent") + ": " + self.app.format_amount_and_units(amount),
+            _("Amount to be sent") + ": " +
+            self.app.format_amount_and_units(amount),
             _("Mining fee") + ": " + self.app.format_amount_and_units(fee),
         ]
         x_fee = run_hook('get_tx_extra_fee', self.app.wallet, tx)
         if x_fee:
             x_fee_address, x_fee_amount = x_fee
-            msg.append(_("Additional fees") + ": " + self.app.format_amount_and_units(x_fee_amount))
+            msg.append(_("Additional fees") + ": " +
+                       self.app.format_amount_and_units(x_fee_amount))
 
-        if fee >= config.get('confirm_fee', 100000):
-            msg.append(_('Warning')+ ': ' + _("The fee for this transaction seems unusually high."))
+        feerate_warning = simple_config.FEERATE_WARNING_HIGH_FEE
+        if fee > feerate_warning * tx.estimated_size() / 1000:
+            msg.append(_('Warning') + ': ' +
+                       _("The fee for this transaction seems unusually high."))
         msg.append(_("Enter your PIN code to proceed"))
         self.app.protected('\n'.join(msg), self.send_tx, (tx, message))
 
     def send_tx(self, tx, message, password):
         if self.app.wallet.has_password() and password is None:
             return
+
         def on_success(tx):
             if tx.is_complete():
                 self.app.broadcast(tx, self.payment_request)
                 self.app.wallet.set_label(tx.txid(), message)
             else:
                 self.app.tx_dialog(tx)
+
         def on_failure(error):
             self.app.show_error(error)
         if self.app.wallet.can_sign(tx):
@@ -325,7 +362,8 @@ class ReceiveScreen(CScreen):
             self.get_new_address()
         else:
             status = self.app.wallet.get_request_status(self.screen.address)
-            self.screen.status = _('Payment received') if status == PR_PAID else ''
+            self.screen.status = _(
+                'Payment received') if status == PR_PAID else ''
 
     def clear(self):
         self.screen.address = ''
@@ -352,14 +390,17 @@ class ReceiveScreen(CScreen):
         return unused
 
     def on_address(self, addr):
-        req = self.app.wallet.get_payment_request(addr, self.app.electrum_config)
+        req = self.app.wallet.get_payment_request(
+            addr, self.app.electrum_config)
         self.screen.status = ''
         if req:
             self.screen.message = req.get('memo', '')
             amount = req.get('amount')
-            self.screen.amount = self.app.format_amount_and_units(amount) if amount else ''
+            self.screen.amount = self.app.format_amount_and_units(
+                amount) if amount else ''
             status = req.get('status', PR_UNKNOWN)
-            self.screen.status = _('Payment received') if status == PR_PAID else ''
+            self.screen.status = _(
+                'Payment received') if status == PR_PAID else ''
         Clock.schedule_once(lambda dt: self.update_qr())
 
     def get_URI(self):
@@ -398,7 +439,8 @@ class ReceiveScreen(CScreen):
             self.app.wallet.add_payment_request(req, self.app.electrum_config)
             added_request = True
         except Exception as e:
-            self.app.show_error(_('Error adding payment request') + ':\n' + str(e))
+            self.app.show_error(
+                _('Error adding payment request') + ':\n' + str(e))
             added_request = False
         finally:
             self.app.update_tab('requests')

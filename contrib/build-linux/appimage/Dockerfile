@@ -23,6 +23,7 @@ RUN apt-get update -q && \
         libzbar0=0.10+doc-9build1  \
         faketime=0.9.5-2 \
         build-essential \
+        libdbus-1-3=1.6.18-0ubuntu4.5 \
         && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
