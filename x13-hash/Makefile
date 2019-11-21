@@ -10,6 +10,7 @@ RELEASEFLAGS = -O2 -D NDEBUG -fwhole-program
 
 TARGET  = libx13.so
 TARGETWIN = libx13.dll
+TARGETMAC = libx13.dylib
 SOURCES = x13.c $(shell echo sha3/*.c)
 HEADERS = x13.h $(shell echo sha3/*.h)
 OBJECTS = $(SOURCES:.c=.o)
@@ -19,7 +20,8 @@ BINDIR = $(PREFIX)/bin
 
 all: linux win mac
 
-mac: linux
+mac: $(OBJECTS)
+	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) -o $(TARGET) $(OBJECTS)
 
 linux: $(OBJECTS)
 	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) -o $(TARGET) $(OBJECTS)
