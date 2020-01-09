@@ -51,8 +51,8 @@ from .logging import get_logger, Logger
 _logger = get_logger(__name__)
 
 
-REQUEST_HEADERS = {'Accept': 'application/bitcoin-rhodium-paymentrequest', 'User-Agent': 'Electrum-XRC'}
-ACK_HEADERS = {'Content-Type':'application/bitcoin-rhodium-payment','Accept':'application/bitcoin-rhodium-paymentack','User-Agent':'Electrum-XRC'}
+REQUEST_HEADERS = {'Accept': 'application/bitcoin-rhodium-paymentrequest', 'User-Agent': 'Electrum Rhodium'}
+ACK_HEADERS = {'Content-Type':'application/bitcoin-rhodium-payment','Accept':'application/bitcoin-rhodium-paymentack','User-Agent':'Electrum Rhodium'}
 
 ca_path = certifi.where()
 ca_list = None
@@ -297,7 +297,7 @@ class PaymentRequest:
         paymnt.transactions.append(bfh(raw_tx))
         ref_out = paymnt.refund_to.add()
         ref_out.script = util.bfh(transaction.Transaction.pay_script(TYPE_ADDRESS, refund_addr))
-        paymnt.memo = "Paid using Electrum-XRC"
+        paymnt.memo = "Paid using Electrum Rhodium"
         pm = paymnt.SerializeToString()
         payurl = urllib.parse.urlparse(pay_det.payment_url)
         resp_content = None

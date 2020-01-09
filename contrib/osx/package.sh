@@ -17,7 +17,7 @@ export PATH=$PATH:~/bin
 . $(dirname "$0")/base.sh
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 Electrum-XRC.app"
+    echo "Usage: $0 Electrum Rhodium.app"
     exit -127
 fi
 
@@ -73,16 +73,16 @@ ${genisoimage} \
     -D \
     -l \
     -probe \
-    -V "Electrum-XRC" \
+    -V "Electrum Rhodium" \
     -no-pad \
     -r \
     -dir-mode 0755 \
     -apple \
-    -o Electrum-XRC_uncompressed.dmg \
+    -o "ElectrumRhodium_uncompressed.dmg" \
     /tmp/electrum-xrc-macos/image || fail "Unable to create uncompressed dmg"
 
-dmg dmg Electrum-XRC_uncompressed.dmg electrum-xrc-$VERSION.dmg || fail "Unable to create compressed dmg"
-rm Electrum-XRC_uncompressed.dmg
+dmg dmg "ElectrumRhodium_uncompressed.dmg" "ElectrumRhodium-$VERSION.dmg" || fail "Unable to create compressed dmg"
+rm "ElectrumRhodium_uncompressed.dmg"
 
 echo "Done."
-sha256sum electrum-xrc-$VERSION.dmg
+sha256sum "ElectrumRhodium-$VERSION.dmg"

@@ -108,7 +108,8 @@ def get_rpc_credentials(config: SimpleConfig) -> Tuple[str, str]:
     rpc_password = config.get('rpcpassword', None)
     if rpc_user is None or rpc_password is None:
         rpc_user = 'user'
-        import ecdsa, base64
+        import ecdsa
+        import base64
         bits = 128
         nbytes = bits // 8 + (bits % 8 > 0)
         pw_int = ecdsa.util.randrange(pow(2, bits))
@@ -130,7 +131,8 @@ class Daemon(DaemonThread):
         self.config = config
         if fd is None and listen_jsonrpc:
             fd, server = get_fd_or_server(config)
-            if fd is None: raise Exception('failed to lock daemon; already running?')
+            if fd is None:
+                raise Exception('failed to lock daemon; already running?')
         self.asyncio_loop, self._stop_loop, self._loop_thread = create_and_start_event_loop()
         if config.get('offline'):
             self.network = None
@@ -157,7 +159,8 @@ class Daemon(DaemonThread):
             server = VerifyingJSONRPCServer((host, port), logRequests=False,
                                             rpc_user=rpc_user, rpc_password=rpc_password)
         except Exception as e:
-            self.logger.error(f'cannot initialize RPC server on host {host}: {repr(e)}')
+            self.logger.error(
+                f'cannot initialize RPC server on host {host}: {repr(e)}')
             self.server = None
             os.close(fd)
             return
@@ -170,7 +173,8 @@ class Daemon(DaemonThread):
         server.register_function(self.run_daemon, 'daemon')
         self.cmd_runner = Commands(self.config, None, self.network)
         for cmdname in known_commands:
-            server.register_function(getattr(self.cmd_runner, cmdname), cmdname)
+            server.register_function(
+                getattr(self.cmd_runner, cmdname), cmdname)
         server.register_function(self.run_cmdline, 'run_cmdline')
 
     def ping(self):
@@ -180,7 +184,8 @@ class Daemon(DaemonThread):
         asyncio.set_event_loop(self.asyncio_loop)
         config = SimpleConfig(config_options)
         sub = config.get('subcommand')
-        assert sub in [None, 'start', 'stop', 'status', 'load_wallet', 'close_wallet']
+        assert sub in [None, 'start', 'stop',
+                       'status', 'load_wallet', 'close_wallet']
         if sub in [None, 'start']:
             response = "Daemon already running"
         elif sub == 'load_wallet':
@@ -203,7 +208,7 @@ class Daemon(DaemonThread):
                 net_params = self.network.get_parameters()
                 current_wallet = self.cmd_runner.wallet
                 current_wallet_path = current_wallet.storage.path \
-                                      if current_wallet else None
+                    if current_wallet else None
                 response = {
                     'path': self.network.config.path,
                     'server': net_params.host,
@@ -236,7 +241,7 @@ class Daemon(DaemonThread):
             else:
                 response = "error: current GUI does not support multiple windows"
         else:
-            response = "Error: Electrum-XRC is running in daemon mode. Please stop the daemon first."
+            response = "Error: Electrum Rhodium is running in daemon mode. Please stop the daemon first."
         return response
 
     def load_wallet(self, path, password) -> Optional[Abstract_Wallet]:
@@ -282,7 +287,8 @@ class Daemon(DaemonThread):
     def stop_wallet(self, path):
         path = standardize_path(path)
         wallet = self.wallets.pop(path, None)
-        if not wallet: return
+        if not wallet:
+            return
         wallet.stop_threads()
 
     def run_cmdline(self, config_options):
@@ -292,7 +298,7 @@ class Daemon(DaemonThread):
         config = SimpleConfig(config_options)
         # FIXME this is ugly...
         config.fee_estimates = self.network.config.fee_estimates.copy()
-        config.mempool_fees  = self.network.config.mempool_fees.copy()
+        config.mempool_fees = self.network.config.mempool_fees.copy()
         cmdname = config.get('cmd')
         cmd = known_commands[cmdname]
         if cmd.requires_wallet:
@@ -300,7 +306,7 @@ class Daemon(DaemonThread):
             path = standardize_path(path)
             wallet = self.wallets.get(path)
             if wallet is None:
-                return {'error': 'Wallet "%s" is not loaded. Use "electrum daemon load_wallet"'%os.path.basename(path) }
+                return {'error': 'Wallet "%s" is not loaded. Use "electrum daemon load_wallet"' % os.path.basename(path)}
         else:
             wallet = None
         # arguments passed to function
@@ -310,13 +316,15 @@ class Daemon(DaemonThread):
         # options
         kwargs = {}
         for x in cmd.options:
-            kwargs[x] = (config_options.get(x) if x in ['password', 'new_password'] else config.get(x))
+            kwargs[x] = (config_options.get(x) if x in [
+                         'password', 'new_password'] else config.get(x))
         cmd_runner = Commands(config, wallet, self.network)
         func = getattr(cmd_runner, cmd.name)
         try:
             result = func(*args, **kwargs)
         except TypeError as e:
-            raise Exception("Wrapping TypeError to prevent JSONRPC-Pelix from hiding traceback") from e
+            raise Exception(
+                "Wrapping TypeError to prevent JSONRPC-Pelix from hiding traceback") from e
         return result
 
     def run(self):

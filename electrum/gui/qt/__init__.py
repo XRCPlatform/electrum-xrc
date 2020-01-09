@@ -88,11 +88,12 @@ class ElectrumGui(Logger):
         Logger.__init__(self)
         # Uncomment this call to verify objects are being properly
         # GC-ed when windows are closed
-        #network.add_jobs([DebugMem([Abstract_Wallet, SPV, Synchronizer,
+        # network.add_jobs([DebugMem([Abstract_Wallet, SPV, Synchronizer,
         #                            ElectrumWindow], interval=5)])
         QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_X11InitThreads)
         if hasattr(QtCore.Qt, "AA_ShareOpenGLContexts"):
-            QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
+            QtCore.QCoreApplication.setAttribute(
+                QtCore.Qt.AA_ShareOpenGLContexts)
         if hasattr(QGuiApplication, 'setDesktopFileName'):
             QGuiApplication.setDesktopFileName('electrum.desktop')
         self.gui_thread = threading.current_thread()
@@ -116,7 +117,7 @@ class ElectrumGui(Logger):
         # init tray
         self.dark_icon = self.config.get("dark_icon", False)
         self.tray = QSystemTrayIcon(self.tray_icon(), None)
-        self.tray.setToolTip('Electrum-XRC')
+        self.tray.setToolTip('Electrum Rhodium')
         self.tray.activated.connect(self.tray_activated)
         self.build_tray_menu()
         self.tray.show()
@@ -125,7 +126,8 @@ class ElectrumGui(Logger):
         run_hook('init_qt', self)
 
     def set_dark_theme_if_needed(self):
-        use_dark_theme = self.config.get('qt_gui_color_theme', 'default') == 'dark'
+        use_dark_theme = self.config.get(
+            'qt_gui_color_theme', 'default') == 'dark'
         if use_dark_theme:
             try:
                 import qdarkstyle
@@ -154,7 +156,7 @@ class ElectrumGui(Logger):
             submenu.addAction(_("Close"), window.close)
         m.addAction(_("Dark/Light"), self.toggle_tray_icon)
         m.addSeparator()
-        m.addAction(_("Exit Electrum-XRC"), self.close)
+        m.addAction(_("Exit Electrum Rhodium"), self.close)
 
     def tray_icon(self):
         if self.dark_icon:
@@ -186,7 +188,8 @@ class ElectrumGui(Logger):
 
     def show_network_dialog(self, parent):
         if not self.daemon.network:
-            parent.show_warning(_('You are using Electrum-XRC in offline mode; restart Electrum-XRC if you want to get connected'), title=_('Offline'))
+            parent.show_warning(
+                _('You are using Electrum Rhodium in offline mode; restart Electrum Rhodium if you want to get connected'), title=_('Offline'))
             return
         if self.nd:
             self.nd.on_update()
@@ -260,13 +263,15 @@ class ElectrumGui(Logger):
                                text=_('Cannot create window for wallet') + ':\n' + str(e))
             if app_is_starting:
                 wallet_dir = os.path.dirname(path)
-                path = os.path.join(wallet_dir, get_new_wallet_name(wallet_dir))
+                path = os.path.join(
+                    wallet_dir, get_new_wallet_name(wallet_dir))
                 self.start_new_window(path, uri)
             return
         if uri:
             window.pay_to_URI(uri)
         window.bring_to_top()
-        window.setWindowState(window.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+        window.setWindowState(window.windowState(
+        ) & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 
         window.activateWindow()
         return window
@@ -298,7 +303,7 @@ class ElectrumGui(Logger):
 
     def close_window(self, window: ElectrumWindow):
         if window in self.windows:
-           self.windows.remove(window)
+            self.windows.remove(window)
         self.build_tray_menu()
         # save wallet path of last open window
         if not self.windows:
@@ -340,7 +345,8 @@ class ElectrumGui(Logger):
                 if self._num_wizards_in_progress > 0 or len(self.windows) > 0:
                     return
             self.app.quit()
-        self.app.setQuitOnLastWindowClosed(False)  # so _we_ can decide whether to quit
+        # so _we_ can decide whether to quit
+        self.app.setQuitOnLastWindowClosed(False)
         self.app.lastWindowClosed.connect(quit_after_last_window)
 
         def clean_up():

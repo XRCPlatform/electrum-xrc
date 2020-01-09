@@ -5,7 +5,7 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules, coll
 import sys
 import os
 
-PACKAGE = 'Electrum-XRC'
+PACKAGE = 'Electrum Rhodium'
 PYPKG = 'electrum'
 MAIN_SCRIPT = 'run_electrum-xrc'
 ICONS_FILE = PYPKG + '/gui/icons/electrum-xrc.icns'

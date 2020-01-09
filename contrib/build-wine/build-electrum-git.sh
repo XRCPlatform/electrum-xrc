@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME_ROOT=electrum-xrc
+NAME_ROOT=ElectrumRhodium
 PYTHON_VERSION=3.6.6
 
 # These settings probably don't need any change
@@ -76,7 +76,7 @@ info "building NSIS installer"
 wine "$WINEPREFIX/drive_c/Program Files (x86)/NSIS/makensis.exe" /DPRODUCT_VERSION=$VERSION electrum-xrc.nsi
 
 cd dist
-mv electrum-xrc-setup.exe $NAME_ROOT-$VERSION-setup.exe
+mv ElectrumRhodium-setup.exe $NAME_ROOT-$VERSION-setup.exe
 cd ..
 
 info "Padding binaries to 8-byte boundaries, and fixing COFF image checksum in PE header"
@@ -121,4 +121,4 @@ EOF
     done
 )
 
-sha256sum dist/electrum-xrc*.exe
+sha256sum dist/ElectrumRhodium*.exe

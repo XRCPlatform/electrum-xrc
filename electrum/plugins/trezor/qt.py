@@ -19,11 +19,11 @@ from .trezor import (TrezorPlugin, TIM_NEW, TIM_RECOVER, TrezorInitSettings,
                      RECOVERY_TYPE_SCRAMBLED_WORDS, RECOVERY_TYPE_MATRIX)
 
 
-PASSPHRASE_HELP_SHORT =_(
+PASSPHRASE_HELP_SHORT = _(
     "Passphrases allow you to access new wallets, each "
     "hidden behind a particular case-sensitive passphrase.")
 PASSPHRASE_HELP = PASSPHRASE_HELP_SHORT + "  " + _(
-    "You need to create a separate Electrum-XRC wallet for each passphrase "
+    "You need to create a separate Electrum Rhodium wallet for each passphrase "
     "you use as they each generate different addresses.  Changing "
     "your passphrase does not lose other wallets, each is still "
     "accessible behind its own passphrase.")
@@ -61,15 +61,18 @@ class MatrixDialog(WindowModalDialog):
         for y in range(3):
             for x in range(3):
                 button = QPushButton('?')
-                button.clicked.connect(partial(self.process_key, ord('1') + y * 3 + x))
+                button.clicked.connect(
+                    partial(self.process_key, ord('1') + y * 3 + x))
                 grid.addWidget(button, 3 - y, x)
                 self.char_buttons.append(button)
         vbox.addLayout(grid)
 
         self.backspace_button = QPushButton("<=")
-        self.backspace_button.clicked.connect(partial(self.process_key, Qt.Key_Backspace))
+        self.backspace_button.clicked.connect(
+            partial(self.process_key, Qt.Key_Backspace))
         self.cancel_button = QPushButton(_("Cancel"))
-        self.cancel_button.clicked.connect(partial(self.process_key, Qt.Key_Escape))
+        self.cancel_button.clicked.connect(
+            partial(self.process_key, Qt.Key_Escape))
         buttons = Buttons(self.backspace_button, self.cancel_button)
         vbox.addSpacing(40)
         vbox.addLayout(buttons)
@@ -180,9 +183,11 @@ class QtPlugin(QtPluginBase):
         for keystore in wallet.get_keystores():
             if type(keystore) == self.keystore_class:
                 def show_address(keystore=keystore):
-                    keystore.thread.add(partial(self.show_address, wallet, addrs[0], keystore))
+                    keystore.thread.add(
+                        partial(self.show_address, wallet, addrs[0], keystore))
                 device_name = "{} ({})".format(self.device, keystore.label)
-                menu.addAction(_("Show on {}").format(device_name), show_address)
+                menu.addAction(_("Show on {}").format(
+                    device_name), show_address)
 
     def show_settings_dialog(self, window, keystore):
         device_id = self.choose_device(window, keystore)
@@ -237,6 +242,7 @@ class QtPlugin(QtPluginBase):
         expert_widget.setLayout(expert_vbox)
         expert_widget.setVisible(False)
         expert_button = QPushButton(_("Show expert settings"))
+
         def show_expert_settings():
             expert_button.setVisible(False)
             expert_widget.setVisible(True)
@@ -386,13 +392,13 @@ class SettingsDialog(WindowModalDialog):
             currently_enabled = self.features.passphrase_protection
             if currently_enabled:
                 msg = _("After disabling passphrases, you can only pair this "
-                        "Electrum-XRC wallet if it had an empty passphrase.  "
+                        "Electrum Rhodium wallet if it had an empty passphrase.  "
                         "If its passphrase was not empty, you will need to "
                         "create a new wallet with the install wizard.  You "
                         "can use this wallet again at any time by re-enabling "
                         "passphrases and entering its passphrase.")
             else:
-                msg = _("Your current Electrum-XRC wallet can only be used with "
+                msg = _("Your current Electrum Rhodium wallet can only be used with "
                         "an empty passphrase.  You must create a separate "
                         "wallet with the install wizard for other passphrases "
                         "as each one generates a new set of addresses.")
@@ -410,10 +416,11 @@ class SettingsDialog(WindowModalDialog):
             if filename.endswith('.toif'):
                 img = open(filename, 'rb').read()
                 if img[:8] != b'TOIf\x90\x00\x90\x00':
-                    handler.show_error('File is not a TOIF file with size of 144x144')
+                    handler.show_error(
+                        'File is not a TOIF file with size of 144x144')
                     return
             else:
-                from PIL import Image # FIXME
+                from PIL import Image  # FIXME
                 im = Image.open(filename)
                 if im.size != (128, 64):
                     handler.show_error('Image must be 128 x 64 pixels')

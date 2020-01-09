@@ -383,7 +383,7 @@ def assert_datadir_available(config_path):
         return
     else:
         raise FileNotFoundError(
-            'Electrum-XRC datadir does not exist. Was it deleted while running?' + '\n' +
+            'Electrum Rhodium datadir does not exist. Was it deleted while running?' + '\n' +
             'Should be at {}'.format(path))
 
 
@@ -938,7 +938,7 @@ class TxMinedInfo(NamedTuple):
 
 def make_aiohttp_session(proxy: Optional[dict], headers=None, timeout=None):
     if headers is None:
-        headers = {'User-Agent': 'Electrum-XRC'}
+        headers = {'User-Agent': 'Electrum Rhodium'}
     if timeout is None:
         timeout = aiohttp.ClientTimeout(total=30)
     elif isinstance(timeout, (int, float)):

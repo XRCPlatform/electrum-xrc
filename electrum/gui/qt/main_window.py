@@ -239,7 +239,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         # If the option hasn't been set yet
         # if config.get('check_updates') is None:
         #     choice = self.question(title="Electrum - " + _("Enable update check"),
-        #                            msg=_("For security reasons we advise that you always use the latest version of Electrum-XRC.") + " " +
+        #                            msg=_("For security reasons we advise that you always use the latest version of Electrum Rhodium.") + " " +
         #                                _("Would you like to be notified when there is a newer version of Electrum available?"))
         #     config.set_key('check_updates', bool(choice), save=True)
 
@@ -248,7 +248,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             # to prevent GC from getting in our way.
             def on_version_received(v):
                 if UpdateCheck.is_newer(v):
-                    self.update_check_button.setText(_("Update to Electrum-XRC {} is available").format(v))
+                    self.update_check_button.setText(_("Update to Electrum Rhodium {} is available").format(v))
                     self.update_check_button.clicked.connect(lambda: self.show_update_check(v))
                     self.update_check_button.show()
             self._update_check_thread = UpdateCheckThread(self)
@@ -446,7 +446,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             self.setGeometry(100, 100, 840, 400)
 
     def watching_only_changed(self):
-        name = "Electrum-XRC Testnet" if constants.net.TESTNET else "Electrum-XRC"
+        name = "Electrum Rhodium Testnet" if constants.net.TESTNET else "Electrum Rhodium"
         title = '%s %s  -  %s' % (name, ELECTRUM_VERSION,
                                         self.wallet.basename())
         extra = [self.wallet.storage.get('wallet_type', '?')]
@@ -517,7 +517,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
                 shutil.copy2(path, new_path)
                 self.show_message(_("A copy of your wallet file was created in")+" '%s'" % str(new_path), title=_("Wallet backup created"))
             except BaseException as reason:
-                self.show_critical(_("Electrum-XRC was unable to copy your wallet file to the specified location.") + "\n" + str(reason), title=_("Unable to create backup"))
+                self.show_critical(_("Electrum Rhodium was unable to copy your wallet file to the specified location.") + "\n" + str(reason), title=_("Unable to create backup"))
 
     def update_recently_visited(self, filename):
         recent = self.config.get('recently_open', [])
@@ -611,7 +611,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         tools_menu = menubar.addMenu(_("&Tools"))
 
         # Settings / Preferences are all reserved keywords in macOS using this as work around
-        tools_menu.addAction(_("Electrum-XRC preferences") if sys.platform == 'darwin' else _("Preferences"), self.settings_dialog)
+        tools_menu.addAction(_("Electrum Rhodium preferences") if sys.platform == 'darwin' else _("Preferences"), self.settings_dialog)
         tools_menu.addAction(_("&Network"), lambda: self.gui_object.show_network_dialog(self))
         tools_menu.addAction(_("&Plugins"), self.plugins_dialog)
         tools_menu.addSeparator()
@@ -651,13 +651,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             self.show_error(_('No donation address for this server'))
 
     def show_about(self):
-        QMessageBox.about(self, "Electrum-XRC",
+        QMessageBox.about(self, "Electrum Rhodium",
                           (_("Version")+" %s" % ELECTRUM_VERSION + "\n\n" +
-                           _("Electrum-XRC's focus is speed, with low resource usage and simplifying Bitcoin Rhodium.") + " " +
-                           _("You do not need to perform regular backups, because your wallet can be "
-                              "recovered from a secret phrase that you can memorize or write on paper.") + " " +
-                           _("Startup times are instant because it operates in conjunction with high-performance "
-                              "servers that handle the most complicated parts of the Bitcoin Rhodium system.") + "\n\n" +
+                           _("Electrum Rhodium's focus is speed, with low resource usage and simplifying Bitcoin Rhodium.") + " " +
                            _("Uses icons from the Icons8 icon pack (icons8.com).")))
 
     def show_update_check(self, version=None):
@@ -668,10 +664,10 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         msg = ' '.join([
             _("Please report any bugs as issues on gitlab:<br/>"),
             "<a href=\"https://gitlab.com/bitcoinrh/electrum-btr\">https://gitlab.com/bitcoinrh/electrum-btr</a><br/><br/>",
-            _("Before reporting a bug, upgrade to the most recent version of Electrum-XRC (latest release or git HEAD), and include the version number in your report."),
+            _("Before reporting a bug, upgrade to the most recent version of Electrum Rhodium (latest release or git HEAD), and include the version number in your report."),
             _("Try to explain not only what the bug is, but how it occurs.")
          ])
-        self.show_message(msg, title="Electrum-XRC - " + _("Reporting Bugs"), rich_text=True)
+        self.show_message(msg, title="Electrum Rhodium - " + _("Reporting Bugs"), rich_text=True)
 
     def notify_transactions(self):
         if self.tx_notification_queue.qsize() == 0:
@@ -711,9 +707,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.tray:
             try:
                 # this requires Qt 5.9
-                self.tray.showMessage("Electrum-XRC", message, read_QIcon(":icons/electrum_dark_icon"), 20000)
+                self.tray.showMessage("Electrum Rhodium", message, read_QIcon(":icons/electrum_dark_icon"), 20000)
             except TypeError:
-                self.tray.showMessage("Electrum-XRC", message, QSystemTrayIcon.Information, 20000)
+                self.tray.showMessage("Electrum Rhodium", message, QSystemTrayIcon.Information, 20000)
 
 
 
@@ -1286,7 +1282,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         def feerounding_onclick():
             text = (self.feerounding_text + '\n\n' +
-                    _('To somewhat protect your privacy, Electrum-XRC tries to create change with similar precision to other outputs.') + ' ' +
+                    _('To somewhat protect your privacy, Electrum Rhodium tries to create change with similar precision to other outputs.') + ' ' +
                     _('At most 100 satoshis might be lost due to this rounding.') + ' ' +
                     _("You can disable this setting in '{}'.").format(_('Preferences')) + '\n' +
                     _('Also, dust is not kept as change, but added to the fee.')  + '\n' +
@@ -2347,7 +2343,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
                 "private key, and verifying with the corresponding public key. The "
                 "address you have entered does not have a unique public key, so these "
                 "operations cannot be performed.") + '\n\n' + \
-               _('The operation is undefined. Not just in Electrum-XRC, but in general.')
+               _('The operation is undefined. Not just in Electrum Rhodium, but in general.')
 
     @protected
     def do_sign(self, address, message, signature, password):
@@ -2516,7 +2512,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             tx = tx_from_str(txt)
             return Transaction(tx)
         except BaseException as e:
-            self.show_critical(_("Electrum-XRC was unable to parse your transaction") + ":\n" + str(e))
+            self.show_critical(_("Electrum Rhodium was unable to parse your transaction") + ":\n" + str(e))
             return
 
     def read_tx_from_qrcode(self):
@@ -2551,7 +2547,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             with open(fileName, "r") as f:
                 file_content = f.read()
         except (ValueError, IOError, os.error) as reason:
-            self.show_critical(_("Electrum-XRC was unable to open your transaction file") + "\n" + str(reason), title=_("Unable to read file or no transaction found"))
+            self.show_critical(_("Electrum Rhodium was unable to open your transaction file") + "\n" + str(reason), title=_("Unable to read file or no transaction found"))
             return
         return self.tx_from_text(file_content)
 
@@ -2663,7 +2659,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             self.do_export_privkeys(filename, private_keys, csv_button.isChecked())
         except (IOError, os.error) as reason:
             txt = "\n".join([
-                _("Electrum-XRC was unable to produce a private key-export."),
+                _("Electrum Rhodium was unable to produce a private key-export."),
                 str(reason)
             ])
             self.show_critical(txt, title=_("Unable to create csv"))
@@ -3261,7 +3257,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         run_hook('close_settings_dialog')
         if self.need_restart:
-            self.show_warning(_('Please restart Electrum-XRC to activate the new GUI settings'), title=_('Success'))
+            self.show_warning(_('Please restart Electrum Rhodium to activate the new GUI settings'), title=_('Success'))
 
 
     def closeEvent(self, event):
@@ -3292,7 +3288,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         self.gui_object.close_window(self)
 
     def plugins_dialog(self):
-        self.pluginsdialog = d = WindowModalDialog(self, _('Electrum-XRC Plugins'))
+        self.pluginsdialog = d = WindowModalDialog(self, _('Electrum Rhodium Plugins'))
 
         plugins = self.gui_object.plugins
 

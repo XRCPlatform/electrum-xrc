@@ -12,7 +12,7 @@ Builder.load_string('''
 
 <PasswordDialog@Popup>
     id: popup
-    title: 'Electrum-XRC'
+    title: 'Electrum Rhodium'
     message: ''
     BoxLayout:
         size_hint: 1, 1
@@ -82,7 +82,8 @@ class PasswordDialog(Factory.Popup):
         self.is_change = is_change
         self.pw = None
         self.new_password = None
-        self.title = 'Electrum-XRC' + ('  -  ' + self.wallet.basename() if self.wallet else '')
+        self.title = 'Electrum Rhodium' + \
+            ('  -  ' + self.wallet.basename() if self.wallet else '')
 
     def check_password(self, password):
         if self.is_change > 1:
@@ -102,7 +103,8 @@ class PasswordDialog(Factory.Popup):
                 return True
         else:
             if self.on_success:
-                args = (self.pw, self.new_password) if self.is_change else (self.pw,)
+                args = (self.pw, self.new_password) if self.is_change else (
+                    self.pw,)
                 Clock.schedule_once(lambda dt: self.on_success(*args), 0.1)
 
     def update_password(self, c):

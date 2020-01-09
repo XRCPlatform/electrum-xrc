@@ -55,14 +55,16 @@ def seed_warning_msg(seed):
         "</ul>"
     ]).format(len(seed.split()))
 
+
 XRC_WALLET_MSG = ''.join([
     '<b>' + _('Make sure the seed, password and first address (if supplied) is correct. For example, if spaces were included in the transaction password, the spaces must be included.') + '</b>',
     '<br /><br />',
     _('By supplying this first web wallet address, it is possible to check if the seed and transaction password are correct before generating the wallet file. This is an optional but useful check.'),
     '<br /><br />',
-    _('Please consider moving your XRC to a new wallet instead if you wish to use Electrum-XRC. '),
+    _('Please consider moving your XRC to a new wallet instead if you wish to use Electrum Rhodium. '),
     _('If you decide to move your XRC to a new wallet, click BACK and select another wallet type.'),
     '<br />'])
+
 
 class SeedLayout(QVBoxLayout):
 
@@ -175,9 +177,11 @@ class SeedLayout(QVBoxLayout):
             self.tx_line.textChanged.connect(self.enable_on_next_web_wallet)
 
             self.address_vbox = QVBoxLayout()
-            self.address_vbox.addWidget(WWLabel(_('First Web Wallet Address: ')))
+            self.address_vbox.addWidget(
+                WWLabel(_('First Web Wallet Address: ')))
             self.first_address = QLineEdit()
-            self.first_address.textChanged.connect(self.enable_on_next_web_wallet)
+            self.first_address.textChanged.connect(
+                self.enable_on_next_web_wallet)
             self.address_vbox.addWidget(self.first_address)
             self.restore_vbox.addLayout(self.address_vbox)
 
@@ -194,12 +198,12 @@ class SeedLayout(QVBoxLayout):
 
         self.addWidget(self.seed_warning)
 
-
     def initialize_completer(self):
         bip39_english_list = Mnemonic('en').wordlist
         old_list = electrum.old_mnemonic.words
         only_old_list = set(old_list) - set(bip39_english_list)
-        self.wordlist = bip39_english_list + list(only_old_list)  # concat both lists
+        self.wordlist = bip39_english_list + \
+            list(only_old_list)  # concat both lists
         self.wordlist.sort()
 
         class CompleterDelegate(QStyledItemDelegate):
@@ -211,7 +215,8 @@ class SeedLayout(QVBoxLayout):
                 # So we color words that are only in old list.
                 if option.text in only_old_list:
                     # yellow bg looks ~ok on both light/dark theme, regardless if (un)selected
-                    option.backgroundBrush = ColorScheme.YELLOW.as_color(background=True)
+                    option.backgroundBrush = ColorScheme.YELLOW.as_color(
+                        background=True)
 
         self.completer = QCompleter(self.wordlist)
         delegate = CompleterDelegate(self.seed_e)
@@ -239,15 +244,16 @@ class SeedLayout(QVBoxLayout):
     def is_seed_test(self):
         if self.is_web_wallet_restore():
             if self.should_do_seed_test():
-                is_seed = self.is_seed(self.get_seed(), self.tx_line.text(), self.first_address.text())
+                is_seed = self.is_seed(
+                    self.get_seed(), self.tx_line.text(), self.first_address.text())
             else:
                 return False
 
             if not is_seed and self.first_address.text():
                 self.warning_tx_address.setText('<b><font color="red">' +
-                _('Could not match first address with the seed and transaction password provided.') +
-                '</font></b>'
-                )
+                                                _('Could not match first address with the seed and transaction password provided.') +
+                                                '</font></b>'
+                                                )
             else:
                 self.warning_tx_address.setText('')
         else:
@@ -263,8 +269,9 @@ class SeedLayout(QVBoxLayout):
         else:
             from electrum.keystore import bip39_is_checksum_valid
             is_checksum, is_wordlist = bip39_is_checksum_valid(s)
-            status = ('checksum: ' + ('ok' if is_checksum else 'failed')) if is_wordlist else 'unknown wordlist'
-            label = 'BIP39' + ' (%s)'%status
+            status = ('checksum: ' + ('ok' if is_checksum else 'failed')
+                      ) if is_wordlist else 'unknown wordlist'
+            label = 'BIP39' + ' (%s)' % status
             if self.is_web_wallet_restore() and is_good_seed and is_wordlist:
                 self.enable_on_next_web_wallet()
         self.seed_type_label.setText(label)
@@ -278,6 +285,7 @@ class SeedLayout(QVBoxLayout):
                 self.seed_e.disable_suggestions()
                 return
         self.seed_e.enable_suggestions()
+
 
 class KeysLayout(QVBoxLayout):
     def __init__(self, parent=None, header_layout=None, is_valid=None, allow_multi=False):
@@ -309,10 +317,12 @@ class KeysLayout(QVBoxLayout):
 class SeedDialog(WindowModalDialog):
 
     def __init__(self, parent, seed, passphrase):
-        WindowModalDialog.__init__(self, parent, ('Electrum-XRC - ' + _('Seed')))
+        WindowModalDialog.__init__(
+            self, parent, ('Electrum Rhodium - ' + _('Seed')))
         self.setMinimumWidth(400)
         vbox = QVBoxLayout(self)
-        title =  _("Your wallet generation seed is:")
-        slayout = SeedLayout(title=title, seed=seed, msg=True, passphrase=passphrase)
+        title = _("Your wallet generation seed is:")
+        slayout = SeedLayout(title=title, seed=seed,
+                             msg=True, passphrase=passphrase)
         vbox.addLayout(slayout)
         vbox.addLayout(Buttons(CloseButton(self)))

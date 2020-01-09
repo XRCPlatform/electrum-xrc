@@ -46,7 +46,7 @@ class Exception_Window(BaseCrashReporter, QWidget, MessageBoxMixin, Logger):
         self.main_window = main_window
 
         QWidget.__init__(self)
-        self.setWindowTitle('Electrum-XRC - ' + _('An Error Occurred'))
+        self.setWindowTitle('Electrum Rhodium - ' + _('An Error Occurred'))
         self.setMinimumSize(600, 300)
 
         Logger.__init__(self)
@@ -62,7 +62,8 @@ class Exception_Window(BaseCrashReporter, QWidget, MessageBoxMixin, Logger):
         collapse_info = QPushButton(_("Show report contents"))
         collapse_info.clicked.connect(
             lambda: self.msg_box(QMessageBox.NoIcon,
-                                 self, _("Report contents"), self.get_report_string(),
+                                 self, _(
+                                     "Report contents"), self.get_report_string(),
                                  rich_text=True))
 
         main_box.addWidget(collapse_info)
@@ -106,9 +107,11 @@ class Exception_Window(BaseCrashReporter, QWidget, MessageBoxMixin, Logger):
                               msg=response,
                               rich_text=True)
             self.close()
+
         def on_failure(exc_info):
             e = exc_info[1]
-            self.logger.error('There was a problem with the automatic reporting', exc_info=exc_info)
+            self.logger.error(
+                'There was a problem with the automatic reporting', exc_info=exc_info)
             self.show_critical(parent=self,
                                msg=(_('There was a problem with the automatic reporting:') + '<br/>' +
                                     repr(e)[:120] + '<br/>' +
@@ -117,7 +120,8 @@ class Exception_Window(BaseCrashReporter, QWidget, MessageBoxMixin, Logger):
                                rich_text=True)
 
         proxy = self.main_window.network.proxy
-        task = lambda: BaseCrashReporter.send_report(self, self.main_window.network.asyncio_loop, proxy)
+        def task(): return BaseCrashReporter.send_report(
+            self, self.main_window.network.asyncio_loop, proxy)
         msg = _('Sending crash report...')
         WaitingDialog(self, msg, task, on_success, on_failure)
 
@@ -158,5 +162,6 @@ class Exception_Hook(QObject, Logger):
         self._report_exception.connect(_show_window)
 
     def handler(self, *exc_info):
-        self.logger.error('exception caught by crash reporter', exc_info=exc_info)
+        self.logger.error(
+            'exception caught by crash reporter', exc_info=exc_info)
         self._report_exception.emit(self.main_window, *exc_info)

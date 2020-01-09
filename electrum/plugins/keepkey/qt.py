@@ -19,7 +19,7 @@ from ..hw_wallet.plugin import only_hook_if_libraries_available
 from .keepkey import KeepKeyPlugin, TIM_NEW, TIM_RECOVER, TIM_MNEMONIC
 
 
-PASSPHRASE_HELP_SHORT =_(
+PASSPHRASE_HELP_SHORT = _(
     "Passphrases allow you to access new wallets, each "
     "hidden behind a particular case-sensitive passphrase.")
 PASSPHRASE_HELP = PASSPHRASE_HELP_SHORT + "  " + _(
@@ -43,6 +43,7 @@ CHARACTER_RECOVERY = (
     "Press BACKSPACE to go back a character or word.\n"
     "Press ENTER or the Seed Entered button once the last word in your "
     "seed is auto-completed.")
+
 
 class CharacterButton(QPushButton):
     def __init__(self, text=None):
@@ -189,7 +190,6 @@ class QtHandler(QtHandlerBase):
         self.done.set()
 
 
-
 class QtPlugin(QtPluginBase):
     # Derived classes must provide the following class-static variables:
     #   icon_file
@@ -206,9 +206,11 @@ class QtPlugin(QtPluginBase):
         for keystore in wallet.get_keystores():
             if type(keystore) == self.keystore_class:
                 def show_address():
-                    keystore.thread.add(partial(self.show_address, wallet, addrs[0], keystore))
+                    keystore.thread.add(
+                        partial(self.show_address, wallet, addrs[0], keystore))
                 device_name = "{} ({})".format(self.device, keystore.label)
-                menu.addAction(_("Show on {}").format(device_name), show_address)
+                menu.addAction(_("Show on {}").format(
+                    device_name), show_address)
 
     def show_settings_dialog(self, window, keystore):
         device_id = self.choose_device(window, keystore)
@@ -255,6 +257,7 @@ class QtPlugin(QtPluginBase):
                 msg = _("Enter your BIP39 mnemonic:")
             else:
                 msg = _("Enter the master private key beginning with xprv:")
+
                 def set_enabled():
                     from electrum.bip32 import is_xprv
                     wizard.next_button.setEnabled(is_xprv(clean_text(text)))
@@ -380,13 +383,13 @@ class SettingsDialog(WindowModalDialog):
             currently_enabled = self.features.passphrase_protection
             if currently_enabled:
                 msg = _("After disabling passphrases, you can only pair this "
-                        "Electrum-XRC wallet if it had an empty passphrase.  "
+                        "Electrum Rhodium wallet if it had an empty passphrase.  "
                         "If its passphrase was not empty, you will need to "
                         "create a new wallet with the install wizard.  You "
                         "can use this wallet again at any time by re-enabling "
                         "passphrases and entering its passphrase.")
             else:
-                msg = _("Your current Electrum-XRC wallet can only be used with "
+                msg = _("Your current Electrum Rhodium wallet can only be used with "
                         "an empty passphrase.  You must create a separate "
                         "wallet with the install wizard for other passphrases "
                         "as each one generates a new set of addresses.")

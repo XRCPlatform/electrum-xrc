@@ -29,7 +29,7 @@ MSG_HW_STORAGE_ENCRYPTION = _("Set wallet file encryption.") + '\n'\
                           + _("Your wallet file does not contain secrets, mostly just metadata. ") \
                           + _("It also contains your master public key that allows watching your addresses.") + '\n\n'\
                           + _("Note: If you enable this setting, you will need your hardware device to open your wallet.")
-WIF_HELP_TEXT = (_('WIF keys are typed in Electrum-XRC, based on script type.') + '\n\n' +
+WIF_HELP_TEXT = (_('WIF keys are typed in Electrum Rhodium, based on script type.') + '\n\n' +
                  _('A few examples') + ':\n' +
                  'p2pkh:KxZcY47uGp9a...       \t-> RDckmggQM...\n')
                  # 'p2wpkh-p2sh:KxZcY47uGp9a... \t-> 3NhNeZQXF...\n' +
@@ -39,7 +39,7 @@ MSG_PASSPHRASE_WARN_ISSUE4566 = _("Warning") + ": "\
                               + _("You have multiple consecutive whitespaces or leading/trailing "
                                   "whitespaces in your passphrase.") + " " \
                               + _("This is discouraged.") + " " \
-                              + _("Due to a bug, old versions of Electrum-XRC will NOT be creating the "
+                              + _("Due to a bug, old versions of Electrum Rhodium will NOT be creating the "
                                   "same wallet as newer versions or other software.")
 
 
@@ -114,7 +114,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
     def __init__(self, config, app, plugins):
         QDialog.__init__(self, None)
         BaseWizard.__init__(self, config, plugins)
-        self.setWindowTitle('Electrum-XRC  -  ' + _('Install Wizard'))
+        self.setWindowTitle('Electrum Rhodium  -  ' + _('Install Wizard'))
         self.app = app
         self.config = config
         self.setMinimumSize(600, 400)
@@ -183,7 +183,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         hbox2.addWidget(self.pw_e)
         hbox2.addStretch()
         vbox.addLayout(hbox2)
-        self.set_layout(vbox, title=_('Electrum-XRC wallet'))
+        self.set_layout(vbox, title=_('Electrum Rhodium wallet'))
 
         self.temp_storage = WalletStorage(path, manual_upgrades=True)
         wallet_folder = os.path.dirname(self.temp_storage.path)
@@ -289,7 +289,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         path = storage.path
         if storage.requires_split():
             self.hide()
-            msg = _("The wallet '{}' contains multiple accounts, which are no longer supported since Electrum-XRC 2.7.\n\n"
+            msg = _("The wallet '{}' contains multiple accounts, which are no longer supported since Electrum Rhodium 2.7.\n\n"
                     "Do you want to split your wallet into multiple files?").format(path)
             if not self.question(msg):
                 return
@@ -599,10 +599,10 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         return None
 
     def init_network(self, network):
-        message = _("Electrum-XRC communicates with remote servers to get "
+        message = _("Electrum Rhodium communicates with remote servers to get "
                   "information about your transactions and addresses. The "
                   "servers all fulfill the same purpose only differing in "
-                  "hardware. In most cases you simply want to let Electrum-XRC "
+                  "hardware. In most cases you simply want to let Electrum Rhodium "
                   "pick one at random.  However if you prefer feel free to "
                   "select a server manually.")
         choices = [_("Auto connect"), _("Select server manually")]

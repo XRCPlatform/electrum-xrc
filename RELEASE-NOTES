@@ -1,4 +1,4 @@
-# Release 3.3.8.1 For Electrum-XRC - (TBA)
+# Release 3.3.8.1 For Electrum Rhodium - (TBA)
 
  * Complete x13 PoW validation using custom C library on all supported platforms.
  * Turn on Ledger support

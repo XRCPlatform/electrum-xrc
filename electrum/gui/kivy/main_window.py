@@ -285,7 +285,7 @@ class ElectrumWindow(App):
 
         App.__init__(self)#, **kwargs)
 
-        title = _('Electrum-XRC App')
+        title = _('Electrum Rhodium App')
         self.electrum_config = config = kwargs.get('config', None)
         self.language = config.get('language', 'en')
         self.network = network = kwargs.get('network', None)  # type: Network
@@ -562,7 +562,7 @@ class ElectrumWindow(App):
             else:
                 self.load_wallet(wallet)
         else:
-            Logger.debug('Electrum-XRC: Wallet not found or action needed. Launching install wizard')
+            Logger.debug('Electrum Rhodium: Wallet not found or action needed. Launching install wizard')
 
             def launch_wizard():
                 wizard = Factory.InstallWizard(self.electrum_config, self.plugins)
@@ -827,8 +827,8 @@ class ElectrumWindow(App):
                 from plyer import notification
             icon = (os.path.dirname(os.path.realpath(__file__))
                     + '/../../' + self.icon)
-            notification.notify('Electrum-XRC', message,
-                            app_icon=icon, app_name='Electrum-XRC')
+            notification.notify('Electrum Rhodium', message,
+                            app_icon=icon, app_name='Electrum Rhodium')
         except ImportError:
             Logger.Error('Notification: needs plyer; `sudo python3 -m pip install plyer`')
 

@@ -3,11 +3,13 @@
 # apt-get update
 # apt-get install -y docker-ce
 
-#docker build --no-cache -t electrum-xrc-appimage-builder-img contrib/build-linux/appimage
+# docker build --no-cache -t electrum-appimage-builder-img .
+sudo docker build -t electrum-appimage-builder-img contrib/build-linux/appimage
+
 docker run -it \
-    --name electrum-xrc-appimage-builder-cont \
-    -v $PWD:/opt/electrum-xrc \
+    --name electrum-appimage-builder-cont \
+    -v $PWD:/opt/electrum \
     --rm \
-    --workdir /opt/electrum-xrc/contrib/build-linux/appimage \
-    electrum-xrc-appimage-builder-img \
+    --workdir /opt/electrum/contrib/build-linux/appimage \
+    electrum-appimage-builder-img \
     ./build.sh

@@ -255,7 +255,7 @@ class TrustedCoinCosignerClient(Logger):
         return self.send_request('post', relative_url, payload, headers)
 
 
-server = TrustedCoinCosignerClient(user_agent="Electrum-XRC/" + version.ELECTRUM_VERSION)
+server = TrustedCoinCosignerClient(user_agent="Electrum Rhodium/" + version.ELECTRUM_VERSION)
 
 class Wallet_2fa(Multisig_Wallet):
 

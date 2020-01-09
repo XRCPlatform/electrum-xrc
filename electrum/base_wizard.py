@@ -660,7 +660,7 @@ class BaseWizard(Logger):
 
         message = ' '.join([
             _("Currently, you will be able to generate a Standard XRC wallet."),
-            _("There will be other wallet options in future versions of Electrum-XRC.")
+            _("There will be other wallet options in future versions of Electrum Rhodium.")
             # _("Segwit wallets use bech32 addresses, defined in BIP173."),
             # _("Please note that websites and other wallets may not support these addresses yet."),
             # _("Thus, you might want to keep using a non-segwit wallet in order to be able to receive bitcoins during the transition period.")

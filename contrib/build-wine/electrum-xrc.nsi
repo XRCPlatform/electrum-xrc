@@ -6,7 +6,7 @@
 ;--------------------------------
 ;Variables
 
-  !define PRODUCT_NAME "Electrum-XRC"
+  !define PRODUCT_NAME "Electrum Rhodium"
   !define PRODUCT_WEB_SITE "https://gitlab.com/bitcoinrh/electrum-btr"
   !define PRODUCT_PUBLISHER "Bitcoin Rhodium Developers"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -16,7 +16,7 @@
 
   ;Name and file
   Name "${PRODUCT_NAME}"
-  OutFile "dist/electrum-xrc-setup.exe"
+  OutFile "dist/ElectrumRhodium-setup.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
@@ -122,21 +122,21 @@ Section
 
   ;Create desktop shortcut
   DetailPrint "Creating desktop shortcut..."
-  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\electrum-xrc-${PRODUCT_VERSION}.exe" ""
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\ElectrumRhodium-${PRODUCT_VERSION}.exe" ""
 
   ;Create start-menu items
   DetailPrint "Creating start-menu items..."
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\electrum-xrc-${PRODUCT_VERSION}.exe" "" "$INSTDIR\electrum-xrc-${PRODUCT_VERSION}.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Testnet.lnk" "$INSTDIR\electrum-xrc-${PRODUCT_VERSION}.exe" "--testnet" "$INSTDIR\electrum-xrc-${PRODUCT_VERSION}.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\ElectrumRhodium-${PRODUCT_VERSION}.exe" "" "$INSTDIR\ElectrumRhodium-${PRODUCT_VERSION}.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Testnet.lnk" "$INSTDIR\ElectrumRhodium-${PRODUCT_VERSION}.exe" "--testnet" "$INSTDIR\ElectrumRhodium-${PRODUCT_VERSION}.exe" 0
 
 
-  ;Links bitcoin: URI's to Electrum-XRC
+  ;Links bitcoin: URI's to Electrum Rhodium
   WriteRegStr HKCU "Software\Classes\bitcoin-rhodium" "" "URL:bitcoin-rhodium Protocol"
   WriteRegStr HKCU "Software\Classes\bitcoin-rhodium" "URL Protocol" ""
   WriteRegStr HKCU "Software\Classes\bitcoin-rhodium" "DefaultIcon" "$\"$INSTDIR\electrum-xrc.ico, 0$\""
-  WriteRegStr HKCU "Software\Classes\bitcoin-rhodium\shell\open\command" "" "$\"$INSTDIR\electrum-xrc-${PRODUCT_VERSION}.exe$\" $\"%1$\""
+  WriteRegStr HKCU "Software\Classes\bitcoin-rhodium\shell\open\command" "" "$\"$INSTDIR\ElectrumRhodium-${PRODUCT_VERSION}.exe$\" $\"%1$\""
 
   ;Adds an uninstaller possibility to Windows Uninstall or change a program section
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"

@@ -1,4 +1,4 @@
-# AppImage binary for Electrum-XRC
+# AppImage binary for Electrum Rhodium
 
 ✓ _This binary should be reproducible, meaning you should be able to generate
 binaries that match the official releases._
@@ -44,4 +44,4 @@ see [issue #5159](https://github.com/spesmilo/electrum/issues/5159).
 
 ### How can I see what is included in the AppImage?
 
-Execute the binary as follows: `./electrum-xrc*.AppImage --appimage-extract`
+Execute the binary as follows: `./ElectrumRhodium*.AppImage --appimage-extract`
