@@ -85,4 +85,4 @@ dmg dmg "ElectrumRhodium_uncompressed.dmg" "ElectrumRhodium-$VERSION.dmg" || fai
 rm "ElectrumRhodium_uncompressed.dmg"
 
 echo "Done."
-sha256sum "ElectrumRhodium-$VERSION.dmg"
+sha256sum "Electrum Rhodium-$VERSION.dmg"

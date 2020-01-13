@@ -21,7 +21,7 @@ BINDIR = $(PREFIX)/bin
 all: linux win mac
 
 mac: $(OBJECTS)
-	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) -o $(TARGET) $(OBJECTS)
+	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) -o $(TARGETMAC) $(OBJECTS)
 
 linux: $(OBJECTS)
 	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) -o $(TARGET) $(OBJECTS)
