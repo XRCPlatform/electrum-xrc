@@ -5,7 +5,7 @@ rm -r $contrib/downloads
 mkdir -p $contrib/downloads
 
 cp -r $contrib/../dist/* $contrib/downloads
-cp -r $contrib/build-wine/dist/*.exe $contrib/downloads
+cp -r $contrib/build-wine/fresh_clone/electrum-btr/contrib/build-wine/dist/*.exe $contrib/downloads
 
 cd $contrib/downloads
 
