@@ -1,5 +1,5 @@
-Electrum - Lightweight Bitcoin Rhodium client
-=============================================
+Electrum Rhodium - Lightweight Bitcoin Rhodium client
+=====================================================
 
 ::
 

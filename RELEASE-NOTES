@@ -1,8 +1,9 @@
-# Release 3.3.8.1 For Electrum Rhodium - (TBA)
+# Release 3.3.8.1 For Electrum Rhodium - (January 20, 2020)
 
  * Complete x13 PoW validation using custom C library on all supported platforms.
  * Turn on Ledger support
  * Updated logos
+ * Updated naming to "Electrum Rhodium" to match current branding.
 
 # Release 3.3.8 - (July 11, 2019)
 
@@ -432,7 +433,7 @@ issue #3374. Users should upgrade to 3.0.5.
     run "python3 setup.py install" in order to install the new
     dependencies.
 
-  * Segwit support: 
+  * Segwit support:
 
     - Native segwit scripts are supported using a new type of
       seed. The version number for segwit seeds is 0x100. The install
