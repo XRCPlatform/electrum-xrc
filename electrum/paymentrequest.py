@@ -51,8 +51,8 @@ from .logging import get_logger, Logger
 _logger = get_logger(__name__)
 
 
-REQUEST_HEADERS = {'Accept': 'application/bitcoin-rhodium-paymentrequest', 'User-Agent': 'Electrum Rhodium'}
-ACK_HEADERS = {'Content-Type':'application/bitcoin-rhodium-payment','Accept':'application/bitcoin-rhodium-paymentack','User-Agent':'Electrum Rhodium'}
+REQUEST_HEADERS = {'Accept': 'application/xrhodium-paymentrequest', 'User-Agent': 'Electrum Rhodium'}
+ACK_HEADERS = {'Content-Type':'application/xrhodium-payment','Accept':'application/xrhodium-paymentack','User-Agent':'Electrum Rhodium'}
 
 ca_path = certifi.where()
 ca_list = None

@@ -22,7 +22,7 @@ for mine in $(ls dist/*.exe); do
     echo "---------------"
     f=$(basename $mine)
     echo "Downloading https://download.electrum.org/$version/$f"
-    wget -q https://electrum-btr.bitcoinrh.org/$version/$f -O signed/$f
+    wget -q https://electrum.xrhodium.org/$version/$f -O signed/$f
     out="signed/stripped/$f"
     # Remove PE signature from signed binary
     osslsigncode remove-signature -in signed/$f -out $out > /dev/null 2>&1

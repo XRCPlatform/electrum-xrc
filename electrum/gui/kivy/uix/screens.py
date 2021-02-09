@@ -275,11 +275,11 @@ class SendScreen(CScreen):
             address = str(self.screen.address)
             if not address:
                 self.app.show_error(_('Recipient not specified.') + ' ' + _(
-                    'Please scan a Bitcoin Rhodium address or a payment request'))
+                    'Please scan a xRhodium address or a payment request'))
                 return
             if not bitcoin.is_address(address):
                 self.app.show_error(
-                    _('Invalid Bitcoin Rhodium Address') + ':\n' + address)
+                    _('Invalid xRhodium Address') + ':\n' + address)
                 return
             try:
                 amount = self.app.get_amount(self.screen.amount)
@@ -420,7 +420,7 @@ class ReceiveScreen(CScreen):
 
     def do_share(self):
         uri = self.get_URI()
-        self.app.do_share(uri, _("Share Bitcoin Rhodium Request"))
+        self.app.do_share(uri, _("Share xRhodium Request"))
 
     def do_copy(self):
         uri = self.get_URI()

@@ -1256,7 +1256,7 @@ class Abstract_Wallet(AddressSynchronizer):
     def add_payment_request(self, req, config):
         addr = req['address']
         if not bitcoin.is_address(addr):
-            raise Exception(_('Invalid Bitcoin Rhodium address.'))
+            raise Exception(_('Invalid xRhodium address.'))
         if not self.is_mine(addr):
             raise Exception(_('Address not in wallet.'))
 

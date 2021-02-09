@@ -659,14 +659,14 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'Bitcoin Rhodium Explorer': ('https://explorer.bitcoinrh.org/btr/',
+    'xRhodium Explorer': ('https://explorer.xrhodium.org/btr/',
                                  {'tx': 'tx/', 'addr': 'address/'}),
-    'Bitcoin Rhodium Blockbook': ('https://blockbook1.bitcoinrh.org/',
+    'xRhodium Blockbook': ('https://blockbook1.xrhodium.org/',
                                  {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 testnet_block_explorers = {
-    'Bitcoin Rhodium Explorer': ('https://texplorer.bitcoinrh.org/btr/',
+    'xRhodium Explorer': ('https://texplorer.xrhodium.org/btr/',
                                  {'tx': 'tx/', 'addr': 'address/'})
 }
 
@@ -716,7 +716,7 @@ def parse_URI(uri: str, on_pr: Callable = None, *, loop=None) -> dict:
         return {'address': uri}
 
     u = urllib.parse.urlparse(uri)
-    if u.scheme != 'bitcoin-rhodium':
+    if u.scheme != 'xrhodium':
         raise Exception("Not a bitcoin URI")
     address = u.path
 

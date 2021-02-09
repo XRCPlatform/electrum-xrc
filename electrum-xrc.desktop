@@ -2,18 +2,18 @@
 # sudo desktop-file-install electrum-xrc.desktop
 
 [Desktop Entry]
-Comment=Lightweight Bitcoin Rhodium Client
+Comment=Lightweight xRhodium Client
 Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum-xrc %u"
-GenericName[en_US]=Bitcoin Rhodium Wallet
-GenericName=Bitcoin Rhodium Wallet
+GenericName[en_US]=xRhodium Wallet
+GenericName=xRhodium Wallet
 Icon=electrum-xrc
-Name[en_US]=Electrum Bitcoin Rhodium Wallet
-Name=Electrum Bitcoin Rhodium Wallet
+Name[en_US]=Electrum xRhodium Wallet
+Name=Electrum xRhodium Wallet
 Categories=Finance;Network;
 StartupNotify=false
 Terminal=false
 Type=Application
-MimeType=x-scheme-handler/bitcoin-rhodium;
+MimeType=x-scheme-handler/xrhodium;
 Actions=Testnet;
 
 [Desktop Action Testnet]

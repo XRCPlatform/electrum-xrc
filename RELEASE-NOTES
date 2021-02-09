@@ -1,3 +1,7 @@
+# Release 3.3.8.2 For Electrum Rhodium - (February 9, 2021)
+
+ * Rebranding to xRhodium
+ 
 # Release 3.3.8.1 For Electrum Rhodium - (January 20, 2020)
 
  * Complete x13 PoW validation using custom C library on all supported platforms.

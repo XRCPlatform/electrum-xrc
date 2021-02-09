@@ -777,8 +777,8 @@ def eval_bool(x: str) -> bool:
 
 param_descriptions = {
     'privkey': 'Private key. Type \'?\' to get a prompt.',
-    'destination': 'Bitcoin Rhodium address, contact or alias',
-    'address': 'Bitcoin Rhodium address',
+    'destination': 'xRhodium address, contact or alias',
+    'address': 'xRhodium address',
     'seed': 'Seed phrase',
     'txid': 'Transaction ID',
     'pos': 'Position',

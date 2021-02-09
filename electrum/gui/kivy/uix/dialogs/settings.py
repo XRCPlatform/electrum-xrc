@@ -44,7 +44,7 @@ Builder.load_string('''
                 SettingsItem:
                     bu: app.base_unit
                     title: _('Denomination') + ': ' + self.bu
-                    description: _("Base unit for Bitcoin Rhodium amounts.")
+                    description: _("Base unit for xRhodium amounts.")
                     action: partial(root.unit_dialog, self)
                 CardSeparator
                 SettingsItem:

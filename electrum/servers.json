@@ -1,23 +1,23 @@
 {
-  "electrumx1.bitcoinrh.org": {
+  "electrumx1.xrhodium.org": {
     "pruning": "-",
     "s": "51002",
     "t": "51001",
     "version": "1.8"
   },
-  "electrumx2.bitcoinrh.org": {
+  "electrumx2.xrhodium.org": {
     "pruning": "-",
     "s": "51002",
     "t": "51001",
     "version": "1.8"
   },
-  "electrumx3.bitcoinrh.org": {
+  "electrumx3.xrhodium.org": {
     "pruning": "-",
     "s": "51002",
     "t": "51001",
     "version": "1.8"
   },
-  "electrumx4.bitcoinrh.org": {
+  "electrumx4.xrhodium.org": {
     "pruning": "-",
     "s": "51002",
     "t": "51001",

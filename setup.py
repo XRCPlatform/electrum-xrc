@@ -89,10 +89,10 @@ setup(
     },
     scripts=['electrum/electrum-xrc'],
     data_files=data_files,
-    description="Lightweight Bitcoin Rhodium Wallet",
-    author="Thomas Voegtlin/Bitcoin Rhodium Developers",
+    description="Lightweight xRhodium Wallet",
+    author="Thomas Voegtlin/xRhodium Developers",
     author_email="thomasv@electrum.org/dvbr3@protonmail.com",
     license="MIT Licence",
-    url="https://electrum.bitcoinrh.org",
-    long_description="""Lightweight Bitcoin Rhodium Wallet"""
+    url="https://electrum.xrhodium.org",
+    long_description="""Lightweight xRhodium Wallet"""
 )

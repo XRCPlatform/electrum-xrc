@@ -1,13 +1,13 @@
-Electrum Rhodium - Lightweight Bitcoin Rhodium client
+Electrum Rhodium - Lightweight xRhodium client
 =====================================================
 
 ::
 
   Licence: MIT Licence
   Author: Thomas Voegtlin
-  Author: Bitcoin Rhodium Developers (Fork)
+  Author: xRhodium Developers (Fork)
   Language: Python (>= 3.6)
-  Homepage: https://electrum.bitcoinrh.org/
+  Homepage: https://electrum.xrhodium.org/
 
 Getting started
 ===============
