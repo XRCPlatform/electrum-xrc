@@ -4,6 +4,7 @@ import sys
 import traceback
 
 from electrum import ecc
+from electrum import constants
 from electrum.bitcoin import TYPE_ADDRESS, int_to_hex, var_int, is_segwit_script_type
 from electrum.bip32 import BIP32Node
 from electrum.i18n import _
@@ -185,6 +186,7 @@ class Ledger_Client():
                     raise UserFacingException('Aborted by user - please unplug the dongle and plug it again before retrying')
                 pin = pin.encode()
                 self.dongleObject.verifyPin(pin)
+                self.dongleObject.setAlternateCoinVersions(constants.net.ADDRTYPE_P2PKH, constants.net.ADDRTYPE_P2SH)
         except BTChipException as e:
             if (e.sw == 0x6faa):
                 raise UserFacingException("Dongle is temporarily locked - please unplug it and replug it again")
@@ -202,7 +204,7 @@ class Ledger_Client():
                 self.perform_hw1_preflight()
             except BTChipException as e:
                 if (e.sw == 0x6d00 or e.sw == 0x6700):
-                    raise Exception(_("Device not in xRhodium mode")) from e
+                    raise UserFacingException(_("Device not in xRhodium mode")) from e
                 raise e
             self.preflightDone = True
 
@@ -556,8 +558,14 @@ class LedgerPlugin(HW_PluginBase):
                    (0x2581, 0x3b7c), # HW.1 ledger production
                    (0x2581, 0x4b7c), # HW.1 ledger test
                    (0x2c97, 0x0000), # Blue
+                   (0x2c97, 0x0011), # Blue app-bitcoin >= 1.5.1
+                   (0x2c97, 0x0015), # Blue app-bitcoin >= 1.5.1
                    (0x2c97, 0x0001), # Nano-S
+                   (0x2c97, 0x1011), # Nano-S app-bitcoin >= 1.5.1
+                   (0x2c97, 0x1015), # Nano-S app-bitcoin >= 1.5.1
                    (0x2c97, 0x0004), # Nano-X
+                   (0x2c97, 0x4011), # Nano-X app-bitcoin >= 1.5.1
+                   (0x2c97, 0x4015), # Nano-X app-bitcoin >= 1.5.1
                    (0x2c97, 0x0005), # RFU
                    (0x2c97, 0x0006), # RFU
                    (0x2c97, 0x0007), # RFU
@@ -603,10 +611,11 @@ class LedgerPlugin(HW_PluginBase):
         device_id = device_info.device.id_
         client = devmgr.client_by_id(device_id)
         if client is None:
-            raise UserFacingException(_('Failed to create a client for this device.') + '\n' +
-                                      _('Make sure it is in the correct state.'))
+            raise UserFacingException(_('Failed to create a client for this device') + '\n' +
+                            _('Make sure it is in the correct state') + '\n' + 
+                            _('Device must be unlocked with the xRhodium app open.'))
         client.handler = self.create_handler(wizard)
-        client.get_xpub("m/44'/0'", 'standard') # TODO replace by direct derivation once Nano S > 1.1
+        client.get_xpub("m/44'/10291'", 'standard') # TODO replace by direct derivation once Nano S > 1.1
 
     def get_xpub(self, device_id, derivation, xtype, wizard):
         if xtype not in self.SUPPORTED_XTYPES:

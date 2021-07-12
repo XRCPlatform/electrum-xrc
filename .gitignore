@@ -16,6 +16,9 @@ buildenv/
 bin/
 /app.fil
 .idea
+electrum/lib/
+electrum/pyvenv.cfg
+electrum/share/
 
 # icons
 electrum/gui/kivy/theming/light-0.png
@@ -52,3 +55,5 @@ contrib/downloads
 electrum-btr_data
 electrum-xrc_data
 contrib/android_debug.keystore
+electrum/pyvenv.cfg
+electrum/share/man/man1/qr.1
