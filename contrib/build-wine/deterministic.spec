@@ -37,6 +37,7 @@ binaries += [b for b in collect_dynamic_libs('PyQt5')
              if 'qwindowsvista' in b[0]]
 
 binaries += [('C:/tmp/libsecp256k1.dll', '.')]
+binaries += [(home+'x11-hash/libx11.dll', '.')]
 binaries += [(home+'x13-hash/libx13.dll', '.')]
 
 datas = [

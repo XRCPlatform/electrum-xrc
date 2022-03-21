@@ -32,8 +32,8 @@ from .util import bfh, bh2u
 from .simple_config import SimpleConfig
 from .logging import get_logger, Logger
 
-from .x13 import get_pow_hash
-
+from .x11 import get_pow_hash_x11
+from .x13 import get_pow_hash_x13
 
 _logger = get_logger(__name__)
 
@@ -69,12 +69,12 @@ def deserialize_header(s: bytes, height: int) -> dict:
     h['block_height'] = height
     return h
 
-def hash_header(header: dict, x13=False) -> str:
+def hash_header(header: dict, x11x13=False) -> str:
     if header is None:
         return '0' * 64
     if header.get('prev_block_hash') is None:
         header['prev_block_hash'] = '00'*32
-    if x13:
+    if x11x13:
         return hash_for_pow(serialize_header(header))
     else:
         return hash_raw_header(serialize_header(header))
@@ -84,7 +84,10 @@ def hash_raw_header(header: str) -> str:
     return hash_encode(sha256d(bfh(header)))
 
 def hash_for_pow(header: str) -> str:
-    return hash_encode(get_pow_hash(bfh(header)))
+    if (header['block_height'] >= constants.net.X11_BLOCK_HEIGHT):
+        return hash_encode(get_pow_hash_x11(bfh(header)))
+    else:
+        return hash_encode(get_pow_hash_x13(bfh(header)))
 
 # key: blockhash hex at forkpoint
 # the chain at some key is the best chain that includes the given hash
@@ -310,7 +313,7 @@ class Blockchain(Logger):
             if bits != header.get('bits'):
                 raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
 
-        _proofhash = hash_header(header, x13=True)
+        _proofhash = hash_header(header, x11x13=True)
         proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')        
         if header.get('block_height') >= constants.net.TARGET_2_BLOCK_HEIGHT and proof_hash_as_num > target:
             raise Exception(f"insufficient proof of work: {proof_hash_as_num} vs target {target}")
