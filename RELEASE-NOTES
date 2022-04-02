@@ -1,3 +1,8 @@
+# Release 3.4 For Electrum Rhodium - (April 2, 2022)
+
+ * Support for digishield algo
+ * UI Changes
+
 # Release 3.3.8.3 For Electrum Rhodium - (March 3, 2022)
 
  * Complete x11 PoW validation using custom C library on all supported platforms.
