@@ -1,6 +1,7 @@
 SHELL = /bin/sh
 CC    = gcc
-WINCC = i686-w64-mingw32
+WINCC32 = i686-w64-mingw32
+WINCC64 = x86_64-w64-mingw32
 FLAGS        = -std=gnu99 -Isrc
 WINFLAGS     = -c -DBUILD_DLL
 CFLAGS       = -fPIC -shared -pedantic -Wall -Wextra -ggdb3 -fpermissive
@@ -26,9 +27,14 @@ mac: $(OBJECTS)
 linux: $(OBJECTS)
 	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) -o $(TARGET) $(OBJECTS)
 
-win:
-	$(WINCC)-g++ -c -D_WIN32 -fpermissive $(SOURCES)
-	$(WINCC)-g++ -shared -o $(TARGETWIN)  *.o -Wl,--out-implib,libx11.a
+win32:
+	$(WINCC32)-g++ -c -D_WIN32 -fpermissive $(SOURCES)
+	$(WINCC32)-g++ -shared -o $(TARGETWIN)  *.o -Wl,--out-implib,libx11.a
+	strip libx11.dll
+
+win64:
+	$(WINCC64)-g++ -c -D_WIN32 -fpermissive $(SOURCES)
+	$(WINCC64)-g++ -shared -o $(TARGETWIN)  *.o -Wl,--out-implib,libx11.a
 	strip libx11.dll
 
 clean:

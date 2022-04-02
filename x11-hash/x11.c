@@ -31,10 +31,19 @@ void x11_hash(const char* input, char* output)
     sph_echo512_context		ctx_echo1;
 
     //these uint512 in the c++ source of the client are backed by an array of uint32
-    uint32_t hashA[16], hashB[16];	
+    uint32_t hashA[16], hashB[16];
+    int offset = 0;
+    int count = 0;
+
+    //While loop that tests whether the end of the array has been reached
+    while (*(input + offset) != '\0')
+    {
+        ++count;
+        ++offset;
+    }
 
     sph_blake512_init(&ctx_blake);
-    sph_blake512 (&ctx_blake, input, 80);
+    sph_blake512 (&ctx_blake, input, count);
     sph_blake512_close (&ctx_blake, hashA);
 
     sph_bmw512_init(&ctx_bmw);
