@@ -84,7 +84,7 @@ def hash_raw_header(header: str) -> str:
     return hash_encode(sha256d(bfh(header)))
 
 def hash_for_pow(header: str) -> str:
-    if (header['block_height'] >= constants.net.X11_BLOCK_HEIGHT):
+    if (header['block_height'] > constants.net.DIGISHIELDX11_BLOCK_HEIGHT):
         return hash_encode(get_pow_hash_x11(bfh(header)))
     else:
         return hash_encode(get_pow_hash_x13(bfh(header)))

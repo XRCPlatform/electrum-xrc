@@ -85,8 +85,7 @@ class BitcoinMainnet(AbstractNet):
     # Hard fork change at 1649
     MAX_TARGET_2 = 0x0000000000092489000000000000000000000000000000000000000000000000
     TARGET_2_BLOCK_HEIGHT = 1649
-    DIGISHIELD_BLOCK_HEIGHT = 16393
-    X11_BLOCK_HEIGHT = 16393
+    DIGISHIELDX11_BLOCK_HEIGHT = 10000000000
 
 class BitcoinTestnet(AbstractNet):
 
@@ -121,8 +120,7 @@ class BitcoinTestnet(AbstractNet):
     MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     MAX_TARGET_2 = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     TARGET_2_BLOCK_HEIGHT = 0
-    DIGISHIELD_BLOCK_HEIGHT = 16393
-    X11_BLOCK_HEIGHT = 16393
+    DIGISHIELDX11_BLOCK_HEIGHT = 16290
 
 
 class BitcoinRegtest(BitcoinTestnet):
