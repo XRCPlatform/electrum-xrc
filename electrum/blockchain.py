@@ -522,6 +522,8 @@ class Blockchain(Logger):
         if index < len(self.checkpoints):
             h, t = self.checkpoints[index]
             return t
+        if index > constants.net.DIGISHIELDX11_BLOCK_HEIGHT:
+            return self.get_targetDigishield(int);
         # new target
         first = self.read_header(index * 2016)
         last = self.read_header(index * 2016 + 2015)
@@ -534,6 +536,40 @@ class Blockchain(Logger):
         nActualTimespan = max(nActualTimespan, nTargetTimespan // 4)
         nActualTimespan = min(nActualTimespan, nTargetTimespan * 4)
         new_target = min(constants.net.MAX_TARGET, (target * nActualTimespan) // nTargetTimespan)
+        # not any target can be represented in 32 bits:
+        new_target = self.bits_to_target(self.target_to_bits(new_target))
+        return new_target
+
+    def get_targetDigishield(self, index: int) -> int:
+
+        nAveragingInterval = 10 * 5 # block
+        multiAlgoTargetSpacingV4 = 10 * 60 # seconds
+        nAveragingTargetTimespanV4 = nAveragingInterval * multiAlgoTargetSpacingV4
+        nMaxAdjustDownV4 = 16
+        nMaxAdjustUpV4 = 8
+        nMinActualTimespanV4 = nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100
+        nMaxActualTimespanV4 = nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100
+
+        height = index
+        last = self.read_header(index - 1) #previous block? is it correct?
+        first = self.read_header(index - nAveragingInterval)
+        if not first or not last:
+            raise MissingHeader()
+
+        # Limit adjustment step
+        # Use medians to prevent time-warp attacks
+        nActualTimespan = last.get('timestamp') - first.get('timestamp')
+        nActualTimespan = nAveragingTargetTimespanV4 + (nActualTimespan.TotalSeconds - nAveragingTargetTimespanV4) / 4
+
+        if nActualTimespan < nMinActualTimespanV4:
+            nActualTimespan = nMinActualTimespanV4
+        if nActualTimespan > nMaxActualTimespanV4:
+            nActualTimespan = nMaxActualTimespanV4
+
+#CHECK onstants.net.MAX_TARGET ??? == proofOfWorkLimit ??
+        bits = last.get('bits')
+        target = self.bits_to_target(bits)
+        new_target = min(constants.net.MAX_TARGET, (target * nActualTimespan) // nAveragingTargetTimespanV4)
         # not any target can be represented in 32 bits:
         new_target = self.bits_to_target(self.target_to_bits(new_target))
         return new_target
