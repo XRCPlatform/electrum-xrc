@@ -17,9 +17,9 @@ static PyObject *x13_getpowhash(PyObject *self, PyObject *args)
     output = PyMem_Malloc(32);
 
 #if PY_MAJOR_VERSION >= 3
-    x13_hash((char *)PyBytes_AsString((PyObject*) input), output);
+    x13_hash((char *)PyBytes_AsString((PyObject*) input), inputSize, output);
 #else
-    x13_hash((char *)PyString_AsString((PyObject*) input), output);
+    x13_hash((char *)PyString_AsString((PyObject*) input), inputSize, output);
 #endif
     Py_DECREF(input);
 #if PY_MAJOR_VERSION >= 3

@@ -22,7 +22,7 @@ except Exception as e:
 
 def get_pow_hash_x11(value):
     result = create_string_buffer(32)
-    LIB_X11.x11_hash(value, result)
+    LIB_X11.x11_hash(value, len(value), result)
     return result
 
 class X11HashTest(unittest.TestCase):

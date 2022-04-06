@@ -75,19 +75,19 @@ def hash_header(header: dict, x11x13=False) -> str:
     if header.get('prev_block_hash') is None:
         header['prev_block_hash'] = '00'*32
     if x11x13:
-        return hash_for_pow(serialize_header(header))
+        return hash_for_pow(header)
     else:
         return hash_raw_header(serialize_header(header))
-
 
 def hash_raw_header(header: str) -> str:
     return hash_encode(sha256d(bfh(header)))
 
-def hash_for_pow(header: str) -> str:
+def hash_for_pow(header: dict) -> str:
+    header_serialized = serialize_header(header)
     if (header['block_height'] > constants.net.DIGISHIELDX11_BLOCK_HEIGHT):
-        return hash_encode(get_pow_hash_x11(bfh(header)))
+        return hash_encode(get_pow_hash_x11(bfh(header_serialized)))
     else:
-        return hash_encode(get_pow_hash_x13(bfh(header)))
+        return hash_encode(get_pow_hash_x13(bfh(header_serialized)))
 
 # key: blockhash hex at forkpoint
 # the chain at some key is the best chain that includes the given hash
@@ -293,7 +293,7 @@ class Blockchain(Logger):
         XRC had a fork at 1648 with a higher diff. It didn't adjust until block 4032.
         Adjustments afterwards are at normal periods.
         """
-        return header.get('block_height') >= constants.net.TARGET_2_BLOCK_HEIGHT and header.get('block_height') < 4032
+        return header.get('block_height') > constants.net.TARGET_2_FROMBLOCK_HEIGHT and header.get('block_height') < 4032
 
     @classmethod
     def verify_header(cls, header: dict, prev_hash: str, target: int, expected_header_hash: str=None) -> None:
@@ -314,8 +314,8 @@ class Blockchain(Logger):
                 raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
 
         _proofhash = hash_header(header, x11x13=True)
-        proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')        
-        if header.get('block_height') >= constants.net.TARGET_2_BLOCK_HEIGHT and proof_hash_as_num > target:
+        proof_hash_as_num = int.from_bytes(bfh(_proofhash), byteorder='big')
+        if header.get('block_height') > constants.net.TARGET_2_FROMBLOCK_HEIGHT and proof_hash_as_num > target:
             raise Exception(f"insufficient proof of work: {proof_hash_as_num} vs target {target}")
 
     def verify_chunk(self, index: int, data: bytes) -> None:
@@ -517,7 +517,7 @@ class Blockchain(Logger):
             return 0
         if index == -1:
             return constants.net.MAX_TARGET
-        if index == 1648:
+        if index == constants.net.TARGET_2_FROMBLOCK_HEIGHT:
             return constants.net.MAX_TARGET_2
         if index < len(self.checkpoints):
             h, t = self.checkpoints[index]
@@ -566,7 +566,6 @@ class Blockchain(Logger):
         if nActualTimespan > nMaxActualTimespanV4:
             nActualTimespan = nMaxActualTimespanV4
 
-#CHECK onstants.net.MAX_TARGET ??? == proofOfWorkLimit ??
         bits = last.get('bits')
         target = self.bits_to_target(bits)
         new_target = min(constants.net.MAX_TARGET, (target * nActualTimespan) // nAveragingTargetTimespanV4)

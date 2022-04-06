@@ -128,8 +128,8 @@ class BaseWizard(Logger):
             _("What kind of wallet do you want to create?")
         ])
         wallet_kinds = [
-            ('web_wallet_restore', _("Restore From Web Wallet")),
             ('standard',  _("Standard wallet (\"R\"-prefixed addresses)")),
+            ('web_wallet_restore', _("Restore From Web Wallet")),
             ('2fa', _("Wallet with two-factor authentication")),
             ('multisig',  _("Multi-signature wallet")),
             ('imported',  _("Import xRhodium addresses or private keys")),
