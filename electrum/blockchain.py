@@ -522,25 +522,30 @@ class Blockchain(Logger):
         if index < len(self.checkpoints):
             h, t = self.checkpoints[index]
             return t
-        if index > constants.net.DIGISHIELDX11_BLOCK_HEIGHT:
-            return self.get_targetDigishield(int);
-        # new target
-        first = self.read_header(index * 2016)
+
+        # new target - check digishield height
+        firstHeight = index * 2016
+        if firstHeight > constants.net.DIGISHIELDX11_BLOCK_HEIGHT:
+            return self.get_targetDigishield(firstHeight);
+
+        first = self.read_header(firstHeight)
         last = self.read_header(index * 2016 + 2015)
         if not first or not last:
             raise MissingHeader()
         bits = last.get('bits')
         target = self.bits_to_target(bits)
+
         nActualTimespan = last.get('timestamp') - first.get('timestamp')
         nTargetTimespan = 14 * 24 * 60 * 60
         nActualTimespan = max(nActualTimespan, nTargetTimespan // 4)
         nActualTimespan = min(nActualTimespan, nTargetTimespan * 4)
         new_target = min(constants.net.MAX_TARGET, (target * nActualTimespan) // nTargetTimespan)
+
         # not any target can be represented in 32 bits:
         new_target = self.bits_to_target(self.target_to_bits(new_target))
         return new_target
 
-    def get_targetDigishield(self, index: int) -> int:
+    def get_targetDigishield(self, height: int) -> int:
 
         nAveragingInterval = 10 * 5 # block
         multiAlgoTargetSpacingV4 = 10 * 60 # seconds
@@ -550,16 +555,18 @@ class Blockchain(Logger):
         nMinActualTimespanV4 = nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100
         nMaxActualTimespanV4 = nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100
 
-        height = index
-        last = self.read_header(index - 1) #previous block? is it correct?
-        first = self.read_header(index - nAveragingInterval)
+        last = self.read_header(height - 1)
+        first = self.read_header(height - nAveragingInterval)
         if not first or not last:
             raise MissingHeader()
 
         # Limit adjustment step
         # Use medians to prevent time-warp attacks
-        nActualTimespan = last.get('timestamp') - first.get('timestamp')
-        nActualTimespan = nAveragingTargetTimespanV4 + (nActualTimespan.TotalSeconds - nAveragingTargetTimespanV4) / 4
+        last_mediantimestamp = self.get_mediantimepast(last.get('block_height'))
+        first_mediantimestamp = self.get_mediantimepast(first.get('block_height'))
+        nActualTimespan = last_mediantimestamp - first_mediantimestamp
+
+        nActualTimespan = nAveragingTargetTimespanV4 + (nActualTimespan - nAveragingTargetTimespanV4) / 4
 
         if nActualTimespan < nMinActualTimespanV4:
             nActualTimespan = nMinActualTimespanV4
@@ -568,19 +575,34 @@ class Blockchain(Logger):
 
         bits = last.get('bits')
         target = self.bits_to_target(bits)
-        new_target = min(constants.net.MAX_TARGET, (target * nActualTimespan) // nAveragingTargetTimespanV4)
-        # not any target can be represented in 32 bits:
-        new_target = self.bits_to_target(self.target_to_bits(new_target))
-        return new_target
+        new_target = target * nActualTimespan
+        new_target = new_target / nAveragingTargetTimespanV4
+        new_targetBits = self.target_to_bits(int(new_target))
+
+        return self.bits_to_target(new_targetBits)
+
+    def get_mediantimepast(self, height:int) -> int:
+        mediantimespan = 11
+        median = mediantimespan * [0]
+
+        for i in range(0, mediantimespan):
+            chainedHeader = self.read_header(height - i)
+            if chainedHeader is None:
+                break
+            else:
+                median[i] = chainedHeader.get('timestamp')
+
+        median.sort()
+        return median[5];
 
     @classmethod
     def bits_to_target(cls, bits: int) -> int:
         bitsN = (bits >> 24) & 0xff
-        if not (0x03 <= bitsN <= 0x1d):
-            raise Exception("First part of bits should be in [0x03, 0x1d]")
+        #if not (0x03 <= bitsN <= 0x1d):
+        #    raise Exception("First part of bits should be in [0x03, 0x1d]")
         bitsBase = bits & 0xffffff
-        if not (0x8000 <= bitsBase <= 0x7fffff):
-            raise Exception("Second part of bits should be in [0x8000, 0x7fffff]")
+        #if not (0x8000 <= bitsBase <= 0x7fffff):
+        #    raise Exception("Second part of bits should be in [0x8000, 0x7fffff]")
         return bitsBase << (8 * (bitsN-3))
 
     @classmethod
