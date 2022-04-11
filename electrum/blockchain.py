@@ -304,6 +304,7 @@ class Blockchain(Logger):
             raise Exception("prev hash mismatch: %s vs %s" % (prev_hash, header.get('prev_block_hash')))
         if constants.net.TESTNET:
             return
+
         if cls._is_in_initial_difficulty_adjustment_with_fork(header):
             bits = cls.target_to_bits(constants.net.MAX_TARGET_2)
             if bits != header.get('bits'):
@@ -322,7 +323,7 @@ class Blockchain(Logger):
         num = len(data) // HEADER_SIZE
         start_height = index * 2016
         prev_hash = self.get_hash(start_height - 1)
-        target = self.get_target(index-1)
+        target = self.get_target(index-1, start_height - 1)
         for i in range(num):
             height = start_height + i
             try:
@@ -484,6 +485,7 @@ class Blockchain(Logger):
                 raise Exception('Expected to read a full header. This was only {} bytes'.format(len(h)))
         if h == bytes([0])*HEADER_SIZE:
             return None
+
         return deserialize_header(h, height)
 
     def header_at_tip(self) -> Optional[dict]:
@@ -511,24 +513,24 @@ class Blockchain(Logger):
                 raise MissingHeader(height)
             return hash_header(header)
 
-    def get_target(self, index: int) -> int:
-        # compute target from chunk x, used in chunk x+1
+    def get_target(self, index: int, height: int) -> int:
+        # compute target from chunk x, used in chunk x+
         if constants.net.TESTNET:
             return 0
         if index == -1:
             return constants.net.MAX_TARGET
         if index == constants.net.TARGET_2_FROMBLOCK_HEIGHT:
             return constants.net.MAX_TARGET_2
-        if index < len(self.checkpoints):
+
+        if (height <= constants.net.DIGISHIELDX11_BLOCK_HEIGHT) and (index < len(self.checkpoints)):
             h, t = self.checkpoints[index]
             return t
 
         # new target - check digishield height
-        firstHeight = index * 2016
-        if firstHeight > constants.net.DIGISHIELDX11_BLOCK_HEIGHT:
-            return self.get_targetDigishield(firstHeight);
+        if height > constants.net.DIGISHIELDX11_BLOCK_HEIGHT:
+            return self.get_targetDigishield(height);
 
-        first = self.read_header(firstHeight)
+        first = self.read_header(index * 2016)
         last = self.read_header(index * 2016 + 2015)
         if not first or not last:
             raise MissingHeader()
@@ -619,7 +621,7 @@ class Blockchain(Logger):
     def chainwork_of_header_at_height(self, height: int) -> int:
         """work done by single header at given height"""
         chunk_idx = height // 2016 - 1
-        target = self.get_target(chunk_idx)
+        target = self.get_target(chunk_idx, height)
         work = ((2 ** 256 - target - 1) // (target + 1)) + 1
         return work
 
@@ -665,7 +667,7 @@ class Blockchain(Logger):
         if prev_hash != header.get('prev_block_hash'):
             return False
         try:
-            target = self.get_target(height // 2016 - 1)
+            target = self.get_target(height // 2016 - 1, height)
         except MissingHeader:
             return False
         try:
@@ -691,7 +693,7 @@ class Blockchain(Logger):
         n = self.height() // 2016
         for index in range(n):
             h = self.get_hash((index+1) * 2016 -1)
-            target = self.get_target(index)
+            target = self.get_target(index, (index+1) * 2016 -1)
             cp.append((h, target))
         return cp
 
