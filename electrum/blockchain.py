@@ -567,7 +567,6 @@ class Blockchain(Logger):
         last_mediantimestamp = self.get_mediantimepast(last.get('block_height'))
         first_mediantimestamp = self.get_mediantimepast(first.get('block_height'))
         nActualTimespan = last_mediantimestamp - first_mediantimestamp
-
         nActualTimespan = nAveragingTargetTimespanV4 + (nActualTimespan - nAveragingTargetTimespanV4) / 4
 
         if nActualTimespan < nMinActualTimespanV4:
@@ -577,25 +576,28 @@ class Blockchain(Logger):
 
         bits = last.get('bits')
         target = self.bits_to_target(bits)
-        new_target = target * nActualTimespan
+        new_target = target * int(nActualTimespan)
         new_target = new_target / nAveragingTargetTimespanV4
         new_targetBits = self.target_to_bits(int(new_target))
-
         return self.bits_to_target(new_targetBits)
 
     def get_mediantimepast(self, height:int) -> int:
         mediantimespan = 11
         median = mediantimespan * [0]
+        begin = mediantimespan
+        end = mediantimespan
 
-        for i in range(0, mediantimespan):
+        for i in range(mediantimespan):
             chainedHeader = self.read_header(height - i)
             if chainedHeader is None:
                 break
             else:
+                begin = begin - 1;
                 median[i] = chainedHeader.get('timestamp')
 
         median.sort()
-        return median[5];
+
+        return median[int(begin + ((end - begin) / 2))];
 
     @classmethod
     def bits_to_target(cls, bits: int) -> int:
@@ -666,10 +668,12 @@ class Blockchain(Logger):
             return False
         if prev_hash != header.get('prev_block_hash'):
             return False
+
         try:
             target = self.get_target(height // 2016 - 1, height)
         except MissingHeader:
             return False
+
         try:
             self.verify_header(header, prev_hash, target)
         except BaseException as e:

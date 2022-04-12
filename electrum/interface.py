@@ -592,7 +592,6 @@ class Interface(Logger):
 
         mock = 'mock' in bad_header and bad_header['mock']['connect'](height)
         real = not mock and self.blockchain.can_connect(bad_header, check_height=False)
-        print(real)
         if not real and not mock:
             raise Exception('unexpected bad header during binary: {}'.format(bad_header))
         _assert_header_does_not_check_against_any_chain(bad_header)
