@@ -564,9 +564,9 @@ class Blockchain(Logger):
 
         # Limit adjustment step
         # Use medians to prevent time-warp attacks
-        last_mediantimestamp = self.get_mediantimepast(last.get('block_height'))
-        first_mediantimestamp = self.get_mediantimepast(first.get('block_height'))
-        nActualTimespan = last_mediantimestamp - first_mediantimestamp
+        last_averagetimestamp = self.get_averageTimepast(last.get('block_height'))
+        first_averagetimestamp = self.get_averageTimepast(first.get('block_height'))
+        nActualTimespan = last_averagetimestamp - first_averagetimestamp
         nActualTimespan = nAveragingTargetTimespanV4 + (nActualTimespan - nAveragingTargetTimespanV4) / 4
 
         if nActualTimespan < nMinActualTimespanV4:
@@ -581,13 +581,13 @@ class Blockchain(Logger):
         new_targetBits = self.target_to_bits(int(new_target))
         return self.bits_to_target(new_targetBits)
 
-    def get_mediantimepast(self, height:int) -> int:
-        mediantimespan = 11
-        median = mediantimespan * [0]
-        begin = mediantimespan
-        end = mediantimespan
+    def get_medianTimepast(self, height:int) -> int:
+        medianTimespan = 11
+        median = medianTimespan * [0]
+        begin = medianTimespan
+        end = medianTimespan
 
-        for i in range(mediantimespan):
+        for i in range(medianTimespan):
             chainedHeader = self.read_header(height - i)
             if chainedHeader is None:
                 break
@@ -598,6 +598,28 @@ class Blockchain(Logger):
         median.sort()
 
         return median[int(begin + ((end - begin) / 2))];
+
+    def get_averageTimepast(self, height:int) -> int:
+        medianTimespan = 11
+        median = list()
+
+        for i in range(medianTimespan):
+            chainedHeader = self.read_header(height - i)
+            if chainedHeader is None:
+                break
+            else:
+                median.append(chainedHeader.get('timestamp'))
+
+        median.sort()
+
+        firstTimespan = median[0]
+        lastTimespan = median[-1]
+        differenceTimespan = lastTimespan - firstTimespan;
+        timespan = int(differenceTimespan / 2);
+        averageDateTime = firstTimespan + timespan;
+
+        return averageDateTime;
+
 
     @classmethod
     def bits_to_target(cls, bits: int) -> int:
