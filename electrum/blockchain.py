@@ -557,6 +557,9 @@ class Blockchain(Logger):
         nMinActualTimespanV4 = nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100
         nMaxActualTimespanV4 = nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100
 
+        if ((height - constants.net.DIGISHIELDX11_BLOCK_HEIGHT) < nAveragingInterval):
+            return int(0x000000000000eb75000000000000000000000000000000000000000000000000)
+
         last = self.read_header(height - 1)
         first = self.read_header(height - nAveragingInterval)
         if not first or not last:
