@@ -559,7 +559,7 @@ class Blockchain(Logger):
         medianTimespan = 11
 
         if ((height - constants.net.DIGISHIELDX11_BLOCK_HEIGHT) <= (nAveragingInterval + 11)):
-            return int(0x0000000000080a1d000000000000000000000000000000000000000000000000)
+            return int(0x000000000001a61a000000000000000000000000000000000000000000000000)
 
         last = self.read_header(height - 1)
         first = self.read_header(height - nAveragingInterval)
