@@ -494,6 +494,7 @@ class Blockchain(Logger):
         return self.read_header(height)
 
     def get_hash(self, height: int) -> str:
+
         def is_height_checkpoint():
             within_cp_range = height <= constants.net.max_checkpoint()
             at_chunk_boundary = (height+1) % 2016 == 0
@@ -558,7 +559,7 @@ class Blockchain(Logger):
         nMaxActualTimespanV4 = nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100
         medianTimespan = 11
 
-        if ((height - constants.net.DIGISHIELDX11_BLOCK_HEIGHT) <= (nAveragingInterval + 11)):
+        if (((height - constants.net.DIGISHIELDX11_BLOCK_HEIGHT) <= (nAveragingInterval + 11)) and not constants.net.TESTNET):
             return int(0x000000000001a61a000000000000000000000000000000000000000000000000)
 
         last = self.read_header(height - 1)
@@ -583,7 +584,9 @@ class Blockchain(Logger):
         new_target = target * int(nActualTimespan)
         new_target = new_target / nAveragingTargetTimespanV4
         new_targetBits = self.target_to_bits(int(new_target))
-        return self.bits_to_target(new_targetBits)
+        bitsToTarget = self.bits_to_target(new_targetBits)
+        bitsToTarget = min(constants.net.MAX_TARGET, bitsToTarget)
+        return bitsToTarget
 
     def get_medianTimepast(self, height:int) -> int:
         medianTimespan = 11
