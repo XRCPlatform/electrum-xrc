@@ -1,4 +1,10 @@
-# Release 3.3.8.2 For Electrum Rhodium - (August 2, 2021)
+# Release 3.4.0.0 For Electrum Rhodium - (April 2, 2022)
+
+ * Support for digishield algo
+ * UI Changes
+ * Complete x11 PoW validation using custom C library on all supported platforms.
+
+# Release 3.3.8.3 For Electrum Rhodium - (August 2, 2021)
 
  * Added plugin for Ledger support
 

@@ -107,6 +107,12 @@ make -j4
 popd
 cp $BUILDDIR/secp256k1/.libs/libsecp256k1.0.dylib contrib/osx
 
+info "Building libx11"
+pushd $src_dir/x11-hash
+make mac
+popd
+cp $src_dir/x11-hash/x11.dylib contrib/osx
+
 info "Building libx13"
 pushd $src_dir/x13-hash
 make mac

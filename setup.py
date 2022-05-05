@@ -78,7 +78,7 @@ setup(
         'electrum': 'electrum'
     },
     package_data={
-        '': ['*.txt', '*.json', '*.ttf', '*.otf', 'x13-hash/libx13.so'],
+        '': ['*.txt', '*.json', '*.ttf', '*.otf', 'x11-hash/libx11.so', 'x13-hash/libx13.so'],
         'electrum': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum-xrc.mo',

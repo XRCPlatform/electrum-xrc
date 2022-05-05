@@ -141,6 +141,12 @@ mkdir -p "$CACHEDIR/pip_cache"
 info "copying zbar"
 cp "/usr/lib/libzbar.so.0" "$APPDIR/usr/lib/libzbar.so.0"
 
+info "build and install x11"
+pushd "$PROJECT_ROOT/x11-hash"
+make linux
+cp libx11.so "$APPDIR/usr/lib"
+popd
+
 info "build and install x13"
 pushd "$PROJECT_ROOT/x13-hash"
 make linux

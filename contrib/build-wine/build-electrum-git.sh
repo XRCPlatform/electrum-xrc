@@ -22,9 +22,14 @@ here="$(dirname "$(readlink -e "$0")")"
 
 pushd $WINEPREFIX/drive_c/electrum
 
+info "BUILDING X11 HASH LIBRARY"
+pushd x11-hash
+make win32
+popd
+
 info "BUILDING X13 HASH LIBRARY"
 pushd x13-hash
-make win
+make win32
 popd
 
 VERSION=`git describe --tags --dirty --always`

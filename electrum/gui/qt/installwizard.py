@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (QWidget, QDialog, QLabel, QHBoxLayout, QMessageBox,
 
 from electrum.wallet import Wallet, Abstract_Wallet
 from electrum.storage import WalletStorage
-from electrum.util import UserCancelled, InvalidPassword, WalletFileException
+from electrum.util import UserCancelled, InvalidPassword, WalletFileException, get_new_wallet_name
 from electrum.base_wizard import BaseWizard, HWD_SETUP_DECRYPT_WALLET, GoBack
 from electrum.i18n import _
 
@@ -183,6 +183,18 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         hbox2.addWidget(self.pw_e)
         hbox2.addStretch()
         vbox.addLayout(hbox2)
+
+        vbox.addSpacing(50)
+        vbox_create_new = QVBoxLayout()
+        vbox_create_new.addWidget(QLabel(_('Alternatively') + ':'), alignment=Qt.AlignLeft)
+        button_create_new = QPushButton(_('Create New Wallet'))
+        button_create_new.setMinimumWidth(120)
+        vbox_create_new.addWidget(button_create_new, alignment=Qt.AlignLeft)
+        widget_create_new = QWidget()
+        widget_create_new.setLayout(vbox_create_new)
+        vbox_create_new.setContentsMargins(0, 0, 0, 0)
+        vbox.addWidget(widget_create_new)
+
         self.set_layout(vbox, title=_('Electrum Rhodium wallet'))
 
         self.temp_storage = WalletStorage(path, manual_upgrades=True)
@@ -236,6 +248,8 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
                 self.pw_e.hide()
 
         button.clicked.connect(on_choose)
+        button_create_new.clicked.connect(
+            lambda: self.name_e.setText(get_new_wallet_name(wallet_folder)))  # FIXME get_new_wallet_name might raise
         self.name_e.textChanged.connect(on_filename)
         n = os.path.basename(self.temp_storage.path)
         self.name_e.setText(n)

@@ -99,6 +99,7 @@ datas += [(electrum + "contrib/osx/CalinsQRReader/build/Release/CalinsQRReader.a
 # Add libusb so Trezor and Safe-T mini will work
 binaries = [(electrum + "contrib/osx/libusb-1.0.dylib", ".")]
 binaries += [(electrum + "contrib/osx/libsecp256k1.0.dylib", ".")]
+binaries += [(electrum + "x11-hash/libx11.dylib", ".")]
 binaries += [(electrum + "x13-hash/libx13.dylib", ".")]
 
 # Workaround for "Retro Look":
