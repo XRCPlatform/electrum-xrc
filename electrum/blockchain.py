@@ -667,7 +667,10 @@ class Blockchain(Logger):
             return height
 
         if height > constants.net.DIGISHIELDX11_BLOCK_HEIGHT:
-            running_total = self.get_chainwork(constants.net.DIGISHIELDX11_BLOCK_HEIGHT)
+            running_total = _CHAINWORK_CACHE.get(self.get_hash(constants.net.DIGISHIELDX11_BLOCK_HEIGHT))
+            if running_total is None:
+                running_total = self.get_chainwork(constants.net.DIGISHIELDX11_BLOCK_HEIGHT)
+                _CHAINWORK_CACHE[self.get_hash(constants.net.DIGISHIELDX11_BLOCK_HEIGHT)] = running_total
 
             for h in range(constants.net.DIGISHIELDX11_BLOCK_HEIGHT + 1, height):
                 work_in_single_header = self.chainwork_of_header_at_height(h)
