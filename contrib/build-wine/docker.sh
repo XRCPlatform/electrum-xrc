@@ -11,7 +11,7 @@ FRESH_CLONE=fresh_clone && \
         rm -rf $FRESH_CLONE && \
         mkdir -p $FRESH_CLONE && \
         cd $FRESH_CLONE  && \
-        git clone https://gitlab.com/bitcoinrh/electrum-btr.git && \
+        git clone https://github.com/XRCPlatform/electrum-xrc.git && \
         cd electrum-btr
 
 docker run -it \

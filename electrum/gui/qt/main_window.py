@@ -662,8 +662,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
     def show_report_bug(self):
         msg = ' '.join([
-            _("Please report any bugs as issues on gitlab:<br/>"),
-            "<a href=\"https://gitlab.com/bitcoinrh/electrum-btr\">https://gitlab.com/bitcoinrh/electrum-btr</a><br/><br/>",
+            _("Please report any bugs as issues on github:<br/>"),
+            "<a href=\"https://github.com/XRCPlatform/electrum-xrc\">https://github.com/XRCPlatform/electrum-xrc</a><br/><br/>",
             _("Before reporting a bug, upgrade to the most recent version of Electrum Rhodium (latest release or git HEAD), and include the version number in your report."),
             _("Try to explain not only what the bug is, but how it occurs.")
          ])

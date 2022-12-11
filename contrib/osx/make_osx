@@ -4,7 +4,7 @@
 PYTHON_VERSION=3.6.4
 BUILDDIR=/tmp/electrum-xrc-build
 PACKAGE="Electrum Rhodium"
-GIT_REPO=https://gitlab.com/bitcoinrh/electrum-btr.git
+GIT_REPO=https://github.com/XRCPlatform/electrum-xrc.git
 LIBSECP_VERSION="b408c6a8b287003d1ade5709e6f7bc3c7f1d5be7"
 
 . $(dirname "$0")/base.sh

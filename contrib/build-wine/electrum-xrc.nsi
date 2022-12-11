@@ -7,7 +7,7 @@
 ;Variables
 
   !define PRODUCT_NAME "Electrum Rhodium"
-  !define PRODUCT_WEB_SITE "https://gitlab.com/bitcoinrh/electrum-btr"
+  !define PRODUCT_WEB_SITE "https://github.com/XRCPlatform/electrum-xrc"
   !define PRODUCT_PUBLISHER "xRhodium Developers"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
