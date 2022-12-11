@@ -393,6 +393,7 @@ class Blockchain(Logger):
         they will be stored in different files."""
         if self.parent is None:
             return False
+
         if self.parent.get_chainwork() >= self.get_chainwork():
             return False
         self.logger.info(f"swapping {self.forkpoint} {self.parent.forkpoint}")
@@ -664,8 +665,22 @@ class Blockchain(Logger):
             # On testnet/regtest, difficulty works somewhat different.
             # It's out of scope to properly implement that.
             return height
+
+        if height > constants.net.DIGISHIELDX11_BLOCK_HEIGHT:
+            running_total = _CHAINWORK_CACHE.get(self.get_hash(constants.net.DIGISHIELDX11_BLOCK_HEIGHT))
+            if running_total is None:
+                running_total = self.get_chainwork(constants.net.DIGISHIELDX11_BLOCK_HEIGHT)
+                _CHAINWORK_CACHE[self.get_hash(constants.net.DIGISHIELDX11_BLOCK_HEIGHT)] = running_total
+
+            for h in range(constants.net.DIGISHIELDX11_BLOCK_HEIGHT + 1, height):
+                work_in_single_header = self.chainwork_of_header_at_height(h)
+                running_total += work_in_single_header
+
+            return running_total
+
         last_retarget = height // 2016 * 2016 - 1
         cached_height = last_retarget
+
         while _CHAINWORK_CACHE.get(self.get_hash(cached_height)) is None:
             if cached_height <= -1:
                 break
