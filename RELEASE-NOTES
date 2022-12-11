@@ -1,3 +1,7 @@
+# Release 3.4.0.2 For Electrum Rhodium - (December 11, 2022)
+
+ * Fixed get_chainwork function
+
 # Release 3.4.0.1 For Electrum Rhodium - (May 16, 2022)
 
  * Fixed correct X11 height
