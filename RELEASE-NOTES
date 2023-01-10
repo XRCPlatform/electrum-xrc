@@ -1,3 +1,7 @@
+# Release 3.4.0.4 For Electrum Rhodium - (January 10, 2022)
+
+ * Fixed issue with chunk verification
+ 
 # Release 3.4.0.3 For Electrum Rhodium - (January 03, 2022)
 
  * Synchronized signed message with Blockcore Node
