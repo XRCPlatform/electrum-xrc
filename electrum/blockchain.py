@@ -326,14 +326,15 @@ class Blockchain(Logger):
         target = self.get_target(index-1, start_height - 1)
         for i in range(num):
             height = start_height + i
-            try:
-                expected_header_hash = self.get_hash(height)
-            except MissingHeader:
-                expected_header_hash = None
-            raw_header = data[i*HEADER_SIZE : (i+1)*HEADER_SIZE]
-            header = deserialize_header(raw_header, index*2016 + i)
-            self.verify_header(header, prev_hash, target, expected_header_hash)
-            prev_hash = hash_header(header)
+            if (height <= constants.net.DIGISHIELDX11_BLOCK_HEIGHT):
+                try:
+                    expected_header_hash = self.get_hash(height)
+                except MissingHeader:
+                    expected_header_hash = None
+                raw_header = data[i*HEADER_SIZE : (i+1)*HEADER_SIZE]
+                header = deserialize_header(raw_header, index*2016 + i)
+                self.verify_header(header, prev_hash, target, expected_header_hash)
+                prev_hash = hash_header(header)
 
     @with_lock
     def path(self):
