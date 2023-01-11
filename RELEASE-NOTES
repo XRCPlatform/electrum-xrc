@@ -1,3 +1,8 @@
+# Release 3.4.0.5 For Electrum Rhodium - (January 10, 2022)
+
+ * Can't connect to server. Dns issues. getaddrinfo failed
+ * https://github.com/spesmilo/electrum/issues/5638
+
 # Release 3.4.0.4 For Electrum Rhodium - (January 10, 2022)
 
  * Fixed issue with chunk verification
